@@ -1,11 +1,13 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, Users, FolderKanban, CheckSquare,
   BarChart3, Sparkles, Settings, Bell, ChevronDown,
-  Zap, LogOut, GraduationCap, DollarSign, Phone, X,
+  Zap, LogOut, GraduationCap, DollarSign, Phone, X, TrendingUp,
+  CheckCircle2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/context/auth-context";
@@ -14,6 +16,7 @@ import { useModules } from "@/context/modules-context";
 import { useSidebar } from "@/context/sidebar-context";
 import type { ModuleId } from "@/lib/modules";
 import { getCustomModuleIcon } from "@/lib/custom-module-icons";
+import { getDeals, getSetupProgress } from "@/lib/storage";
 
 interface NavItem {
   moduleId: ModuleId;
@@ -32,6 +35,19 @@ export function Sidebar() {
   const { isOpen, close } = useSidebar();
   const { customModules } = useModules();
 
+  // Live pipeline stats
+  const [pipelineValue, setPipelineValue] = useState(0);
+  const [openDeals,     setOpenDeals]     = useState(0);
+  const [setupDone,     setSetupDone]     = useState(5); // assume complete until loaded
+
+  useEffect(() => {
+    const deals  = getDeals();
+    const active = deals.filter((d) => d.stage !== "closed_lost" && d.stage !== "closed_won");
+    setPipelineValue(active.reduce((s, d) => s + d.value, 0));
+    setOpenDeals(active.length);
+    setSetupDone(getSetupProgress().length);
+  }, []);
+
   const allNavItems: NavItem[] = [
     { moduleId: "dashboard", href: "/dashboard", label: t("nav_dashboard"), icon: LayoutDashboard },
     { moduleId: "clients",   href: "/clients",   label: t("nav_clients"),   icon: Users },
@@ -40,6 +56,7 @@ export function Sidebar() {
       moduleId: "tasks", href: "/tasks", label: t("nav_tasks"), icon: CheckSquare,
       badge: <span className="ml-auto text-[11px] bg-[#1c1c35] text-[#8080a8] px-1.5 py-0.5 rounded-md">10</span>,
     },
+    { moduleId: "pipeline",  href: "/pipeline",  label: t("nav_pipeline_page"), icon: TrendingUp },
     { moduleId: "analytics", href: "/analytics", label: t("nav_analytics"), icon: BarChart3 },
     {
       moduleId: "assistant", href: "/assistant", label: t("nav_assistant"), icon: Sparkles,
@@ -168,22 +185,61 @@ export function Sidebar() {
         )}
       </nav>
 
-      {/* Pipeline widget */}
-      <div className="mx-3 mb-3 p-3 rounded-xl bg-[#111128] border border-[#1c1c35]">
-        <p className="text-[11px] font-medium text-[#5a5a8a] mb-2">{t("nav_pipeline")}</p>
-        <p className="text-[18px] font-semibold text-white">$215K</p>
-        <div className="flex items-center gap-1 mt-1">
-          <span className="text-[11px] text-emerald-400">↑ 15.8%</span>
-          <span className="text-[11px] text-[#5a5a8a]">{t("nav_vs_last_month")}</span>
+      {/* Setup progress — shown when not all 5 steps done */}
+      {setupDone < 5 && (
+        <Link href="/dashboard" onClick={close}>
+          <div className="mx-3 mb-2 p-3 rounded-xl bg-[#0d0d1c] border border-[#1c1c35] hover:border-[#252545] transition-colors">
+            <div className="flex items-center justify-between mb-1.5">
+              <p className="text-[11px] font-medium text-[#8080a8]">Getting started</p>
+              <span className="text-[10px] text-indigo-400 font-medium">{setupDone}/5</span>
+            </div>
+            <div className="h-1 bg-[#1c1c35] rounded-full overflow-hidden mb-2">
+              <div
+                className="h-full bg-linear-to-r from-indigo-500 to-violet-500 rounded-full transition-all duration-500"
+                style={{ width: `${(setupDone / 5) * 100}%` }}
+              />
+            </div>
+            <div className="flex gap-1">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <div
+                  key={i}
+                  className={cn(
+                    "flex-1 h-1 rounded-full",
+                    i < setupDone ? "bg-indigo-500" : "bg-[#1c1c35]"
+                  )}
+                />
+              ))}
+            </div>
+          </div>
+        </Link>
+      )}
+
+      {/* Pipeline widget — live data */}
+      <Link href="/pipeline" onClick={close}>
+        <div className="mx-3 mb-3 p-3 rounded-xl bg-[#111128] border border-[#1c1c35] hover:border-[#252545] transition-colors">
+          <div className="flex items-center justify-between mb-1">
+            <p className="text-[11px] font-medium text-[#5a5a8a]">{t("nav_pipeline")}</p>
+            {setupDone >= 5 && (
+              <CheckCircle2 size={11} className="text-emerald-400" />
+            )}
+          </div>
+          <p className="text-[18px] font-semibold text-white">
+            {pipelineValue >= 1000
+              ? `$${(pipelineValue / 1000).toFixed(0)}K`
+              : `$${pipelineValue}`}
+          </p>
+          <div className="flex items-center gap-1 mt-1">
+            <span className="text-[11px] text-emerald-400">↑ active</span>
+          </div>
+          <div className="mt-2.5 h-1.5 bg-[#1c1c35] rounded-full overflow-hidden">
+            <div className="h-full bg-linear-to-r from-indigo-500 to-violet-500 rounded-full"
+              style={{ width: openDeals > 0 ? "62%" : "0%" }} />
+          </div>
+          <div className="flex justify-between mt-1">
+            <span className="text-[10px] text-[#5a5a8a]">{openDeals} {t("nav_open_deals")}</span>
+          </div>
         </div>
-        <div className="mt-2.5 h-1.5 bg-[#1c1c35] rounded-full overflow-hidden">
-          <div className="h-full w-[62%] bg-linear-to-r from-indigo-500 to-violet-500 rounded-full" />
-        </div>
-        <div className="flex justify-between mt-1">
-          <span className="text-[10px] text-[#5a5a8a]">3 {t("nav_open_deals")}</span>
-          <span className="text-[10px] text-[#5a5a8a]">62%</span>
-        </div>
-      </div>
+      </Link>
 
       {/* Bottom */}
       <div className="px-3 pb-4 border-t border-[#1c1c35] pt-3 space-y-0.5">

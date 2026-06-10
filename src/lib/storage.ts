@@ -1,5 +1,5 @@
-import type { Client, Project, Task, CustomModule } from "./types";
-import { clients as defaultClients, projects as defaultProjects, tasks as defaultTasks } from "./mock-data";
+import type { Client, Project, Task, Deal, CustomModule } from "./types";
+import { clients as defaultClients, projects as defaultProjects, tasks as defaultTasks, deals as defaultDeals } from "./mock-data";
 
 const CLIENTS_KEY   = "nexus_crm_clients";
 const PROJECTS_KEY  = "nexus_crm_projects";
@@ -45,6 +45,50 @@ export function getTasks(): Task[] {
 
 export function saveTasks(tasks: Task[]) {
   localStorage.setItem(TASKS_KEY, JSON.stringify(tasks));
+}
+
+const DEALS_KEY = "ventra_deals";
+
+export function getDeals(): Deal[] {
+  if (typeof window === "undefined") return defaultDeals;
+  const raw = localStorage.getItem(DEALS_KEY);
+  if (!raw) {
+    localStorage.setItem(DEALS_KEY, JSON.stringify(defaultDeals));
+    return defaultDeals;
+  }
+  return JSON.parse(raw) as Deal[];
+}
+
+export function saveDeals(deals: Deal[]): void {
+  localStorage.setItem(DEALS_KEY, JSON.stringify(deals));
+}
+
+// Onboarding / setup progress
+const ONBOARDING_KEY  = "ventra_onboarding_done";
+const SETUP_KEY       = "ventra_setup_progress";
+
+export function isOnboardingDone(): boolean {
+  if (typeof window === "undefined") return true;
+  return localStorage.getItem(ONBOARDING_KEY) === "1";
+}
+
+export function markOnboardingDone(): void {
+  localStorage.setItem(ONBOARDING_KEY, "1");
+}
+
+export type SetupStep = "profile" | "client" | "project" | "task" | "pipeline";
+
+export function getSetupProgress(): SetupStep[] {
+  if (typeof window === "undefined") return [];
+  const raw = localStorage.getItem(SETUP_KEY);
+  return raw ? (JSON.parse(raw) as SetupStep[]) : [];
+}
+
+export function markSetupStep(step: SetupStep): void {
+  const done = getSetupProgress();
+  if (!done.includes(step)) {
+    localStorage.setItem(SETUP_KEY, JSON.stringify([...done, step]));
+  }
 }
 
 const CUSTOM_MODULES_KEY = "ventra_custom_modules";

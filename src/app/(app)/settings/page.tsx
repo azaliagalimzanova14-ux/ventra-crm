@@ -16,7 +16,7 @@ import {
 import {
   User, Bell, Puzzle, Shield, Settings2, Palette,
   LayoutDashboard, Users, FolderKanban, CheckSquare,
-  BarChart3, Sparkles, GraduationCap, DollarSign, Phone,
+  BarChart3, Sparkles, GraduationCap, DollarSign, Phone, TrendingUp,
   Mail, Check, Sun, Plus, Pencil, Trash2,
   Package,
 } from "lucide-react";
@@ -49,6 +49,7 @@ const BUILTIN_MODULE_ICONS: Record<ModuleId, React.ElementType> = {
   clients:   Users,
   projects:  FolderKanban,
   tasks:     CheckSquare,
+  pipeline:  TrendingUp,
   analytics: BarChart3,
   assistant: Sparkles,
   learning:  GraduationCap,
