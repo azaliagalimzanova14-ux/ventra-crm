@@ -340,10 +340,10 @@ const PROMPTS: Record<Lang, { icon: string; label: string; category: string }[]>
 
 function AssistantMessage({ content }: { content: string }) {
   return (
-    <div className="text-[13px] text-[#c8c8e8] leading-relaxed whitespace-pre-wrap">
+    <div className="text-[13px] text-[var(--color-fg)] leading-relaxed whitespace-pre-wrap">
       {content.split(/(\*\*[^*]+\*\*)/).map((part, i) =>
         part.startsWith("**") && part.endsWith("**")
-          ? <strong key={i} className="text-white font-semibold">{part.slice(2, -2)}</strong>
+          ? <strong key={i} className="text-[var(--color-fg)] font-semibold">{part.slice(2, -2)}</strong>
           : <span key={i}>{part}</span>
       )}
     </div>
@@ -446,9 +446,9 @@ export default function AssistantPage() {
       <div className="flex flex-1 overflow-hidden">
 
         {/* ── Sidebar ─────────────────────────────────────────────────────── */}
-        <div className="w-60 border-r border-[#1c1c35] bg-[#0d0d1c] flex flex-col p-4 gap-4 overflow-y-auto flex-shrink-0">
+        <div className="w-60 border-r border-[var(--color-border)] bg-[var(--color-canvas)] flex flex-col p-4 gap-4 overflow-y-auto flex-shrink-0">
           <div>
-            <p className="text-[11px] font-medium text-[#5a5a8a] uppercase tracking-wider mb-2">
+            <p className="text-[11px] font-medium text-[var(--color-fg-faint)] uppercase tracking-wider mb-2">
               {t("assistant_quick")}
             </p>
             <div className="space-y-1">
@@ -457,14 +457,14 @@ export default function AssistantPage() {
                   key={p.label}
                   onClick={() => sendMessage(p.label)}
                   disabled={loading}
-                  className="w-full flex items-start gap-2.5 px-3 py-2.5 rounded-lg text-left hover:bg-white/5 transition-colors group disabled:opacity-50"
+                  className="w-full flex items-start gap-2.5 px-3 py-2.5 rounded-lg text-left hover:bg-[var(--color-canvas)] transition-colors group disabled:opacity-50"
                 >
                   <span className="text-[14px] flex-shrink-0 mt-0.5">{p.icon}</span>
                   <div className="min-w-0">
-                    <p className="text-[12px] text-[#8080a8] group-hover:text-[#e0e0f0] leading-snug">{p.label}</p>
-                    <span className="text-[10px] text-indigo-400/60 font-medium">{p.category}</span>
+                    <p className="text-[12px] text-[var(--color-fg-muted)] group-hover:text-[var(--color-fg)] leading-snug">{p.label}</p>
+                    <span className="text-[10px] text-[var(--color-accent)]/60 font-medium">{p.category}</span>
                   </div>
-                  <ChevronRight size={12} className="ml-auto text-[#5a5a8a] opacity-0 group-hover:opacity-100 flex-shrink-0 mt-1" />
+                  <ChevronRight size={12} className="ml-auto text-[var(--color-fg-faint)] opacity-0 group-hover:opacity-100 flex-shrink-0 mt-1" />
                 </button>
               ))}
             </div>
@@ -472,10 +472,10 @@ export default function AssistantPage() {
 
           {/* Live context panel */}
           <div className="mt-auto">
-            <div className="bg-linear-to-br from-indigo-500/10 to-violet-500/10 border border-indigo-500/20 rounded-xl p-3">
+            <div className="bg-linear-to-br from-indigo-500/10 to-violet-500/10 border border-[var(--color-accent)] rounded-xl p-3">
               <div className="flex items-center gap-2 mb-3">
-                <Zap size={13} className="text-indigo-400" />
-                <p className="text-[11px] font-semibold text-indigo-300">{t("assistant_ctx")}</p>
+                <Zap size={13} className="text-[var(--color-accent)]" />
+                <p className="text-[11px] font-semibold text-[var(--color-accent)]">{t("assistant_ctx")}</p>
               </div>
               <div className="space-y-1.5">
                 {[
@@ -485,21 +485,21 @@ export default function AssistantPage() {
                 ].map((row) => (
                   <div key={row.label} className="flex items-center gap-1.5 text-[11px]">
                     <span>{row.icon}</span>
-                    <span className="font-semibold text-white">{row.count}</span>
-                    <span className="text-[#5a5a8a]">{row.label}</span>
+                    <span className="font-semibold text-[var(--color-fg)]">{row.count}</span>
+                    <span className="text-[var(--color-fg-faint)]">{row.label}</span>
                   </div>
                 ))}
                 {overdueCount > 0 && (
-                  <div className="flex items-center gap-1.5 text-[11px] mt-2 pt-2 border-t border-indigo-500/20">
-                    <AlertTriangle size={11} className="text-red-400" />
-                    <span className="font-semibold text-red-400">{overdueCount}</span>
-                    <span className="text-red-400/70">{t("assistant_ctx_overdue")}</span>
+                  <div className="flex items-center gap-1.5 text-[11px] mt-2 pt-2 border-t border-[var(--color-accent)]">
+                    <AlertTriangle size={11} className="text-red-500" />
+                    <span className="font-semibold text-red-500">{overdueCount}</span>
+                    <span className="text-red-500/70">{t("assistant_ctx_overdue")}</span>
                   </div>
                 )}
                 {overdueCount === 0 && tasks.length > 0 && (
-                  <div className="flex items-center gap-1.5 text-[11px] mt-2 pt-2 border-t border-indigo-500/20">
-                    <TrendingUp size={11} className="text-emerald-400" />
-                    <span className="text-emerald-400/80">All on track</span>
+                  <div className="flex items-center gap-1.5 text-[11px] mt-2 pt-2 border-t border-[var(--color-accent)]">
+                    <TrendingUp size={11} className="text-emerald-600" />
+                    <span className="text-emerald-600/80">All on track</span>
                   </div>
                 )}
               </div>
@@ -517,11 +517,11 @@ export default function AssistantPage() {
                   "w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5",
                   msg.role === "assistant"
                     ? "bg-linear-to-br from-indigo-500 to-violet-600"
-                    : "bg-[#1c1c35] border border-[#252545]"
+                    : "bg-[var(--color-border)] border border-[var(--color-border)]"
                 )}>
                   {msg.role === "assistant"
-                    ? <Sparkles size={14} className="text-white" />
-                    : <User size={14} className="text-[#8080a8]" />}
+                    ? <Sparkles size={14} className="text-[var(--color-fg)]" />
+                    : <User size={14} className="text-[var(--color-fg-muted)]" />}
                 </div>
 
                 {/* Bubble */}
@@ -529,31 +529,31 @@ export default function AssistantPage() {
                   <div className={cn(
                     "rounded-2xl px-4 py-3",
                     msg.role === "assistant"
-                      ? "bg-[#111128] border border-[#1c1c35] rounded-tl-sm"
-                      : "bg-indigo-600 rounded-tr-sm"
+                      ? "bg-[var(--color-surface)] border border-[var(--color-border)] rounded-tl-sm"
+                      : "bg-[var(--color-accent)] rounded-tr-sm"
                   )}>
                     {msg.role === "assistant"
                       ? <AssistantMessage content={msg.content} />
-                      : <p className="text-[13px] text-white">{msg.content}</p>}
+                      : <p className="text-[13px] text-[var(--color-fg)]">{msg.content}</p>}
                   </div>
 
                   {/* Action row */}
                   {msg.role === "assistant" && (
                     <div className="flex items-center gap-0.5 pl-1">
-                      <span className="text-[10px] text-[#3a3a5a] mr-1.5">{msg.timestamp}</span>
+                      <span className="text-[10px] text-[var(--color-fg-faint)] mr-1.5">{msg.timestamp}</span>
                       <button
                         onClick={() => copyMessage(msg.id, msg.content)}
-                        className="p-1.5 rounded-lg hover:bg-white/5 text-[#5a5a8a] hover:text-[#8080a8] transition-colors"
+                        className="p-1.5 rounded-lg hover:bg-[var(--color-canvas)] text-[var(--color-fg-faint)] hover:text-[var(--color-fg-muted)] transition-colors"
                         title={t("assistant_copied")}
                       >
                         {copiedId === msg.id
-                          ? <Check size={12} className="text-emerald-400" />
+                          ? <Check size={12} className="text-emerald-600" />
                           : <Copy size={12} />}
                       </button>
-                      <button className="p-1.5 rounded-lg hover:bg-white/5 text-[#5a5a8a] hover:text-emerald-400 transition-colors">
+                      <button className="p-1.5 rounded-lg hover:bg-[var(--color-canvas)] text-[var(--color-fg-faint)] hover:text-emerald-600 transition-colors">
                         <ThumbsUp size={12} />
                       </button>
-                      <button className="p-1.5 rounded-lg hover:bg-white/5 text-[#5a5a8a] hover:text-red-400 transition-colors">
+                      <button className="p-1.5 rounded-lg hover:bg-[var(--color-canvas)] text-[var(--color-fg-faint)] hover:text-red-500 transition-colors">
                         <ThumbsDown size={12} />
                       </button>
                     </div>
@@ -566,9 +566,9 @@ export default function AssistantPage() {
             {loading && (
               <div className="flex gap-3">
                 <div className="w-8 h-8 rounded-full bg-linear-to-br from-indigo-500 to-violet-600 flex items-center justify-center flex-shrink-0">
-                  <Sparkles size={14} className="text-white" />
+                  <Sparkles size={14} className="text-[var(--color-fg)]" />
                 </div>
-                <div className="bg-[#111128] border border-[#1c1c35] rounded-2xl rounded-tl-sm px-4 py-3">
+                <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl rounded-tl-sm px-4 py-3">
                   <div className="flex gap-1 items-center h-5">
                     {[0, 1, 2].map((i) => (
                       <div
@@ -585,20 +585,20 @@ export default function AssistantPage() {
           </div>
 
           {/* ── Input ──────────────────────────────────────────────────────── */}
-          <div className="border-t border-[#1c1c35] p-4 bg-[#07070f] flex-shrink-0">
-            <div className="flex items-end gap-3 bg-[#111128] border border-[#1c1c35] rounded-xl px-4 py-3 focus-within:border-indigo-500/50 transition-colors">
+          <div className="border-t border-[var(--color-border)] p-4 bg-[var(--color-canvas)] flex-shrink-0">
+            <div className="flex items-end gap-3 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl px-4 py-3 focus-within:border-[var(--color-accent)] transition-colors">
               <textarea
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder={t("assistant_ph")}
                 rows={1}
-                className="flex-1 bg-transparent text-[13px] text-[#e0e0f0] placeholder-[#5a5a8a] resize-none focus:outline-none leading-relaxed max-h-32"
+                className="flex-1 bg-transparent text-[13px] text-[var(--color-fg)] placeholder-[#5a5a8a] resize-none focus:outline-none leading-relaxed max-h-32"
               />
               <div className="flex items-center gap-2 flex-shrink-0">
                 <button
                   onClick={resetChat}
-                  className="p-1.5 rounded-lg hover:bg-white/5 text-[#5a5a8a] hover:text-white transition-colors"
+                  className="p-1.5 rounded-lg hover:bg-[var(--color-canvas)] text-[var(--color-fg-faint)] hover:text-[var(--color-fg)] transition-colors"
                   title={t("assistant_reset")}
                 >
                   <RotateCcw size={14} />
@@ -606,13 +606,13 @@ export default function AssistantPage() {
                 <button
                   onClick={() => sendMessage(input)}
                   disabled={!input.trim() || loading}
-                  className="p-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed text-white transition-colors"
+                  className="p-2 rounded-lg bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] disabled:opacity-40 disabled:cursor-not-allowed text-[var(--color-fg)] transition-colors"
                 >
                   <Send size={14} />
                 </button>
               </div>
             </div>
-            <p className="text-[10px] text-[#5a5a8a] text-center mt-2">{t("assistant_hint")}</p>
+            <p className="text-[10px] text-[var(--color-fg-faint)] text-center mt-2">{t("assistant_hint")}</p>
           </div>
         </div>
       </div>

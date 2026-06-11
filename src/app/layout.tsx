@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { AuthProvider } from "@/context/auth-context";
+import { AuthProvider }     from "@/context/auth-context";
 import { LanguageProvider } from "@/context/language-context";
+import { ThemeProvider }    from "@/context/theme-context";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -15,11 +16,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en">
       <body className="min-h-screen antialiased">
-        <LanguageProvider>
-          <AuthProvider>{children}</AuthProvider>
-        </LanguageProvider>
+        <ThemeProvider>
+          <LanguageProvider>
+            <AuthProvider>{children}</AuthProvider>
+          </LanguageProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

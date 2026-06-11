@@ -17,9 +17,12 @@ import {
   User, Bell, Puzzle, Shield, Settings2, Palette,
   LayoutDashboard, Users, FolderKanban, CheckSquare,
   BarChart3, Sparkles, GraduationCap, DollarSign, Phone, TrendingUp,
-  Mail, Check, Sun, Plus, Pencil, Trash2,
-  Package,
+  Mail, Check, Plus, Pencil, Trash2,
+  Package, ChevronUp, ChevronDown,
 } from "lucide-react";
+import { useTheme } from "@/context/theme-context";
+import { ACCENT_PALETTES, WIDGET_LABELS } from "@/lib/theme";
+import type { AccentColor, IconStyle } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -63,7 +66,7 @@ const BUILTIN_MODULE_ICONS: Record<ModuleId, React.ElementType> = {
 
 function SectionCard({ children }: { children: React.ReactNode }) {
   return (
-    <div className="bg-[#0d0d1c] border border-[#1c1c35]/80 rounded-2xl overflow-hidden">
+    <div className="bg-[var(--color-canvas)] border border-[var(--color-border)]/80 rounded-2xl overflow-hidden">
       {children}
     </div>
   );
@@ -76,13 +79,13 @@ function SectionHeader({ icon: Icon, title, sub, action }: {
   action?: React.ReactNode;
 }) {
   return (
-    <div className="flex items-center gap-3 px-5 py-3.5 border-b border-[#1c1c35]/60">
-      <div className="w-7 h-7 rounded-lg bg-indigo-500/10 flex items-center justify-center flex-shrink-0">
-        <Icon size={14} className="text-indigo-400/80" />
+    <div className="flex items-center gap-3 px-5 py-3.5 border-b border-[var(--color-border)]/60">
+      <div className="w-7 h-7 rounded-lg bg-[var(--color-accent-subtle)] flex items-center justify-center flex-shrink-0">
+        <Icon size={14} className="text-[var(--color-accent)]/80" />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-[13px] font-semibold text-[#c0c0d8]">{title}</p>
-        {sub && <p className="text-[11px] text-[#5a5a8a] mt-0.5">{sub}</p>}
+        <p className="text-[13px] font-semibold text-[var(--color-fg)]">{title}</p>
+        {sub && <p className="text-[11px] text-[var(--color-fg-faint)] mt-0.5">{sub}</p>}
       </div>
       {action}
     </div>
@@ -91,10 +94,10 @@ function SectionHeader({ icon: Icon, title, sub, action }: {
 
 function FieldRow({ label, children, sub }: { label: string; children: React.ReactNode; sub?: string }) {
   return (
-    <div className="px-5 py-3.5 flex items-center gap-4 border-b border-[#1c1c35]/60 last:border-0 hover:bg-white/[0.015] transition-colors">
+    <div className="px-5 py-3.5 flex items-center gap-4 border-b border-[var(--color-border)]/60 last:border-0 hover:bg-[var(--color-canvas)] transition-colors">
       <div className="w-40 flex-shrink-0">
-        <label className="text-[12px] font-medium text-[#7070a0] block">{label}</label>
-        {sub && <p className="text-[11px] text-[#4a4a6a] mt-0.5">{sub}</p>}
+        <label className="text-[12px] font-medium text-[var(--color-fg-muted)] block">{label}</label>
+        {sub && <p className="text-[11px] text-[var(--color-fg-faint)] mt-0.5">{sub}</p>}
       </div>
       {children}
     </div>
@@ -116,10 +119,10 @@ function TextInput({ value, onChange, type = "text", placeholder, disabled }: {
       disabled={disabled}
       onChange={(e) => onChange(e.target.value)}
       className={cn(
-        "flex-1 bg-[#080818] border rounded-lg px-3 py-2 text-[13px] text-[#d0d0e8] placeholder-[#4a4a6a] focus:outline-none transition-all duration-150",
+        "flex-1 bg-[var(--color-canvas)] border rounded-lg px-3 py-2 text-[13px] text-[var(--color-fg)] placeholder:text-[var(--color-fg-placeholder)] focus:outline-none transition-all duration-150",
         disabled
-          ? "border-[#1c1c35]/50 opacity-40 cursor-not-allowed"
-          : "border-[#1c1c35]/80 focus:border-indigo-500/40 hover:border-[#252545]"
+          ? "border-[var(--color-border)]/50 opacity-40 cursor-not-allowed"
+          : "border-[var(--color-border)]/80 focus:border-[var(--color-accent)] hover:border-[var(--color-border)]"
       )}
     />
   );
@@ -132,15 +135,15 @@ function Toggle({ enabled, onChange }: { enabled: boolean; onChange: (v: boolean
       aria-checked={enabled}
       role="switch"
       className={cn(
-        "relative rounded-full transition-all duration-200 ease-in-out flex-shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/50",
-        enabled ? "bg-indigo-600 hover:bg-indigo-500" : "bg-[#1e1e38] hover:bg-[#252548] border border-[#2a2a48]"
+        "relative rounded-full transition-all duration-200 ease-in-out flex-shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]",
+        enabled ? "bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)]" : "bg-[var(--color-border)] hover:bg-[var(--color-border)] border border-[var(--color-border)]"
       )}
       style={{ height: "18px", width: "32px" }}
     >
       <span
         className={cn(
           "absolute top-[2px] w-[14px] h-[14px] rounded-full shadow-sm transition-all duration-200 ease-in-out",
-          enabled ? "translate-x-[16px] bg-white" : "translate-x-[2px] bg-[#5a5a8a]"
+          enabled ? "translate-x-[16px] bg-white" : "translate-x-[2px] bg-[var(--color-fg-faint)]"
         )}
       />
     </button>
@@ -181,41 +184,41 @@ function CustomModuleForm({
   }
 
   return (
-    <div className="border-t border-[#1c1c35]/60 bg-[#080818]/40 px-5 py-4 space-y-3.5">
-      <p className="text-[12px] font-semibold text-[#9090c0] uppercase tracking-wider">
+    <div className="border-t border-[var(--color-border)]/60 bg-[var(--color-canvas)]/40 px-5 py-4 space-y-3.5">
+      <p className="text-[12px] font-semibold text-[var(--color-fg-muted)] uppercase tracking-wider">
         {mode === "create" ? t("custom_module_new_title") : t("custom_module_edit_title")}
       </p>
 
       {/* Name + Description side by side */}
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-1.5">
-          <label className="text-[11px] font-medium text-[#6060a0]">{t("custom_module_name")}</label>
+          <label className="text-[11px] font-medium text-[var(--color-fg-muted)]">{t("custom_module_name")}</label>
           <input
             ref={nameRef}
             value={form.name}
             onChange={(e) => { setForm({ ...form, name: e.target.value }); setError(""); }}
             placeholder={t("custom_module_ph_name")}
             className={cn(
-              "w-full bg-[#0d0d1c] border rounded-lg px-3 py-2 text-[13px] text-[#d0d0e8] placeholder-[#4a4a6a] focus:outline-none transition-all duration-150",
-              error ? "border-red-500/40 focus:border-red-500/60" : "border-[#1c1c35]/80 focus:border-indigo-500/40"
+              "w-full bg-[var(--color-canvas)] border rounded-lg px-3 py-2 text-[13px] text-[var(--color-fg)] placeholder:text-[var(--color-fg-placeholder)] focus:outline-none transition-all duration-150",
+              error ? "border-red-500/40 focus:border-red-500/60" : "border-[var(--color-border)]/80 focus:border-[var(--color-accent)]"
             )}
           />
           {error && <p className="text-[10px] text-red-400/80">{error}</p>}
         </div>
         <div className="space-y-1.5">
-          <label className="text-[11px] font-medium text-[#6060a0]">{t("custom_module_desc")}</label>
+          <label className="text-[11px] font-medium text-[var(--color-fg-muted)]">{t("custom_module_desc")}</label>
           <input
             value={form.description}
             onChange={(e) => setForm({ ...form, description: e.target.value })}
             placeholder={t("custom_module_ph_desc")}
-            className="w-full bg-[#0d0d1c] border border-[#1c1c35]/80 rounded-lg px-3 py-2 text-[13px] text-[#d0d0e8] placeholder-[#4a4a6a] focus:outline-none focus:border-indigo-500/40 transition-all duration-150"
+            className="w-full bg-[var(--color-canvas)] border border-[var(--color-border)]/80 rounded-lg px-3 py-2 text-[13px] text-[var(--color-fg)] placeholder:text-[var(--color-fg-placeholder)] focus:outline-none focus:border-[var(--color-accent)] transition-all duration-150"
           />
         </div>
       </div>
 
       {/* Icon picker */}
       <div className="space-y-2">
-        <label className="text-[11px] font-medium text-[#6060a0]">{t("custom_module_icon_label")}</label>
+        <label className="text-[11px] font-medium text-[var(--color-fg-muted)]">{t("custom_module_icon_label")}</label>
         <div className="flex flex-wrap gap-1.5">
           {CUSTOM_MODULE_ICON_KEYS.map((key) => {
             const Icon = CUSTOM_MODULE_ICON_MAP[key];
@@ -229,8 +232,8 @@ function CustomModuleForm({
                 className={cn(
                   "w-7 h-7 rounded-md flex items-center justify-center transition-all duration-150",
                   selected
-                    ? "bg-indigo-600/90 text-white"
-                    : "bg-[#0d0d1c] border border-[#1c1c35]/80 text-[#4a4a6a] hover:text-[#9090c0] hover:border-[#252545]"
+                    ? "bg-[var(--color-accent)]/90 text-[var(--color-fg)]"
+                    : "bg-[var(--color-canvas)] border border-[var(--color-border)]/80 text-[var(--color-fg-faint)] hover:text-[var(--color-fg-muted)] hover:border-[var(--color-border)]"
                 )}
               >
                 <Icon size={13} strokeWidth={1.75} />
@@ -244,18 +247,18 @@ function CustomModuleForm({
       <div className="flex items-center justify-between pt-0.5">
         <div className="flex items-center gap-2">
           <Toggle enabled={form.enabled} onChange={(v) => setForm({ ...form, enabled: v })} />
-          <span className="text-[12px] text-[#6060a0]">{t("settings_tab_modules")}</span>
+          <span className="text-[12px] text-[var(--color-fg-muted)]">{t("settings_tab_modules")}</span>
         </div>
         <div className="flex items-center gap-2">
           <button
             onClick={onCancel}
-            className="px-3 py-1.5 rounded-lg text-[12px] font-medium text-[#6060a0] hover:text-[#c0c0e0] border border-[#1c1c35]/80 hover:border-[#252545] transition-all duration-150"
+            className="px-3 py-1.5 rounded-lg text-[12px] font-medium text-[var(--color-fg-muted)] hover:text-[var(--color-fg)] border border-[var(--color-border)]/80 hover:border-[var(--color-border)] transition-all duration-150"
           >
             {t("btn_cancel")}
           </button>
           <button
             onClick={handleSave}
-            className="px-3 py-1.5 rounded-lg text-[12px] font-medium bg-indigo-600/90 hover:bg-indigo-500 text-white transition-all duration-150"
+            className="px-3 py-1.5 rounded-lg text-[12px] font-medium bg-[var(--color-accent)]/90 hover:bg-[var(--color-accent-hover)] text-[var(--color-fg)] transition-all duration-150"
           >
             {mode === "create" ? t("btn_create") : t("btn_save")}
           </button>
@@ -277,6 +280,7 @@ export default function SettingsPage() {
   const [tab, setTab]   = useState<Tab>("general");
 
 
+  const { prefs, setAccent, setIconStyle, setDashWidgets } = useTheme();
   const [profile, setProfile] = useState({ name: "", email: "", company: "", timezone: "" });
   const [notifications, setNotifications] = useState({ email: true, tasks: true, pipeline: false });
   const [customForm, setCustomForm]       = useState<CustomFormMode>({ open: false });
@@ -332,7 +336,7 @@ export default function SettingsPage() {
     <>
       {/* Toast */}
       {toast && (
-        <div className="fixed bottom-6 right-6 z-[200] bg-[#1c1c35] border border-indigo-500/30 text-white text-[13px] font-medium px-4 py-2.5 rounded-xl shadow-xl flex items-center gap-2">
+        <div className="fixed bottom-6 right-6 z-[200] bg-[var(--color-fg)] text-white text-[13px] font-medium px-4 py-2.5 rounded-xl shadow-xl flex items-center gap-2">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0" />
           {toast}
         </div>
@@ -355,11 +359,11 @@ export default function SettingsPage() {
                       className={cn(
                         "w-full flex items-center gap-2 px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-150 text-left",
                         tab === id
-                          ? "bg-indigo-500/12 text-indigo-300"
-                          : "text-[#6060a0] hover:text-[#c0c0e0] hover:bg-white/[0.04]"
+                          ? "bg-[var(--color-accent-subtle)] text-[var(--color-accent)]"
+                          : "text-[var(--color-fg-muted)] hover:text-[var(--color-fg)] hover:bg-[var(--color-canvas)]"
                       )}
                     >
-                      <Icon size={13} className={tab === id ? "text-indigo-400" : "text-[#4a4a7a]"} strokeWidth={tab === id ? 2 : 1.75} />
+                      <Icon size={13} className={tab === id ? "text-[var(--color-accent)]" : "text-[var(--color-fg-faint)]"} strokeWidth={tab === id ? 2 : 1.75} />
                       {label}
                     </button>
                   ))}
@@ -388,14 +392,14 @@ export default function SettingsPage() {
                     <SectionCard>
                       <SectionHeader icon={Settings2} title={t("settings_general_title")} sub={t("settings_general_sub")} />
                       <FieldRow label={t("settings_lang_label")} sub={t("settings_lang_sub")}>
-                        <div className="flex items-center bg-[#0d0d1c] border border-[#1c1c35] rounded-lg p-1 gap-0.5 w-fit">
+                        <div className="flex items-center bg-[var(--color-canvas)] border border-[var(--color-border)] rounded-lg p-1 gap-0.5 w-fit">
                           {(["ru", "en"] as const).map((l) => (
                             <button
                               key={l}
                               onClick={() => setLang(l)}
                               className={cn(
                                 "px-3 py-1.5 rounded-md text-[12px] font-medium transition-colors uppercase",
-                                lang === l ? "bg-indigo-600 text-white" : "text-[#5a5a8a] hover:text-[#e0e0f0]"
+                                lang === l ? "bg-[var(--color-accent)] text-[var(--color-fg)]" : "text-[var(--color-fg-faint)] hover:text-[var(--color-fg)]"
                               )}
                             >
                               {l === "ru" ? "Русский" : "English"}
@@ -414,10 +418,10 @@ export default function SettingsPage() {
                     </SectionCard>
 
                     <div className="flex items-center justify-between pt-1">
-                      <p className="text-[12px] text-[#5a5a8a]">{t("settings_demo_note")}</p>
+                      <p className="text-[12px] text-[var(--color-fg-faint)]">{t("settings_demo_note")}</p>
                       <button
                         onClick={handleSave}
-                        className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-[13px] font-medium rounded-lg transition-colors shadow-lg shadow-indigo-500/20"
+                        className="flex items-center gap-2 px-4 py-2 bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-[var(--color-fg)] text-[13px] font-medium rounded-lg transition-colors shadow-lg "
                       >
                         {t("settings_save")}
                       </button>
@@ -427,52 +431,121 @@ export default function SettingsPage() {
 
                 {/* ── Appearance ───────────────────────────────────────────── */}
                 {tab === "appearance" && (
-                  <SectionCard>
-                    <SectionHeader icon={Palette} title={t("settings_appearance_title")} sub={t("settings_appearance_sub")} />
+                  <div className="space-y-4">
 
-                    <div className="px-5 py-5 border-b border-[#1c1c35]">
-                      <p className="text-[12px] font-medium text-[#8080a8] mb-3">{t("settings_theme_label")}</p>
-                      <div className="flex gap-3">
-                        {/* Dark — active */}
-                        <div className="flex flex-col items-center gap-2 cursor-default">
-                          <div className="w-28 rounded-xl border-2 border-indigo-500 bg-[#07070f] overflow-hidden relative shadow-lg shadow-indigo-500/20" style={{ height: "72px" }}>
-                            <div className="absolute left-0 top-0 h-full w-8 bg-[#0d0d1c] border-r border-[#1c1c35]" />
-                            <div className="absolute top-2 left-10 right-2 h-2 bg-[#1c1c35] rounded" />
-                            <div className="absolute top-6 left-10 right-2 h-8 bg-[#111128] rounded border border-[#1c1c35]" />
-                            <div className="absolute bottom-1 right-1 w-3 h-3 rounded-full bg-indigo-500/40 flex items-center justify-center">
-                              <Check size={6} className="text-indigo-400" />
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
-                            <span className="text-[12px] font-medium text-indigo-400">{t("settings_theme_dark")}</span>
-                          </div>
-                        </div>
-                        {/* Light — coming soon */}
-                        <div className="flex flex-col items-center gap-2 cursor-not-allowed opacity-40">
-                          <div className="w-28 rounded-xl border border-[#1c1c35] bg-[#f8f8ff] overflow-hidden" style={{ height: "72px" }}>
-                            <div className="h-full w-8 float-left bg-[#f0f0fa] border-r border-[#ddd]" />
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Sun size={12} className="text-[#5a5a8a]" />
-                            <span className="text-[12px] text-[#5a5a8a]">{t("settings_theme_coming")}</span>
-                          </div>
+                    {/* Accent color */}
+                    <SectionCard>
+                      <SectionHeader icon={Palette} title="Accent color" sub="Changes buttons, links, and highlighted elements" />
+                      <div className="px-5 py-5">
+                        <div className="flex gap-3 flex-wrap">
+                          {(Object.keys(ACCENT_PALETTES) as AccentColor[]).map((accent) => {
+                            const pal = ACCENT_PALETTES[accent];
+                            const active = prefs.accent === accent;
+                            return (
+                              <button key={accent} onClick={() => setAccent(accent)}
+                                className={cn(
+                                  "flex flex-col items-center gap-2 group transition-all",
+                                )}>
+                                <div className={cn(
+                                  "w-10 h-10 rounded-xl shadow-sm border-2 transition-all duration-200",
+                                  active ? "border-[var(--color-fg)] scale-110 shadow-md" : "border-transparent hover:scale-105"
+                                )}
+                                  style={{ background: pal.color }} />
+                                <div className={cn(
+                                  "flex items-center gap-1 text-[11px] font-medium capitalize",
+                                  active ? "text-[var(--color-fg)]" : "text-[var(--color-fg-faint)]"
+                                )}>
+                                  {active && <Check size={10} className="text-[var(--color-fg)]" />}
+                                  {accent}
+                                </div>
+                              </button>
+                            );
+                          })}
                         </div>
                       </div>
-                    </div>
+                    </SectionCard>
 
-                    <FieldRow label={t("settings_density_label")} sub={t("settings_density_sub")}>
-                      <span className="text-[12px] text-[#5a5a8a] bg-[#1c1c35] border border-[#252545] px-2 py-1 rounded-md">
-                        {t("settings_modules_soon")}
-                      </span>
-                    </FieldRow>
-                  </SectionCard>
+                    {/* Icon style */}
+                    <SectionCard>
+                      <SectionHeader icon={Settings2} title="Icon style" sub="Controls icon stroke weight across the app" />
+                      <div className="px-5 py-5">
+                        <div className="flex gap-3">
+                          {(["outline", "solid"] as IconStyle[]).map((style) => {
+                            const active = prefs.iconStyle === style;
+                            return (
+                              <button key={style} onClick={() => setIconStyle(style)}
+                                className={cn(
+                                  "flex items-center gap-2 px-4 py-2 rounded-xl border text-[13px] font-medium transition-all",
+                                  active
+                                    ? "border-[var(--color-accent)] bg-[var(--color-accent-subtle)] text-[var(--color-accent)]"
+                                    : "border-[var(--color-border)] text-[var(--color-fg-muted)] hover:border-[var(--color-accent-subtle)] hover:text-[var(--color-fg)]"
+                                )}>
+                                {active && <Check size={13} />}
+                                <span className="capitalize">{style}</span>
+                                <span className="text-[11px] opacity-60">({style === "outline" ? "thin" : "bold"})</span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </SectionCard>
+
+                    {/* Dashboard widgets */}
+                    <SectionCard>
+                      <SectionHeader icon={LayoutDashboard} title="Dashboard widgets" sub="Choose which widgets appear and in what order" />
+                      <div className="px-5 py-4 space-y-2">
+                        {(Object.keys(WIDGET_LABELS) as string[]).map((id) => {
+                          const isOn = prefs.dashWidgets.includes(id);
+                          const idx  = prefs.dashWidgets.indexOf(id);
+                          return (
+                            <div key={id} className="flex items-center gap-3 px-3 py-2.5 bg-[var(--color-canvas)] border border-[var(--color-border)] rounded-xl hover:border-[var(--color-accent-subtle)] transition-colors">
+                              <button onClick={() => {
+                                if (isOn) setDashWidgets(prefs.dashWidgets.filter((w) => w !== id));
+                                else setDashWidgets([...prefs.dashWidgets, id]);
+                              }}
+                                className={cn(
+                                  "w-9 h-5 rounded-full transition-colors flex-shrink-0 relative",
+                                  isOn ? "bg-[var(--color-accent)]" : "bg-[var(--color-border)]"
+                                )}>
+                                <span className={cn("absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow-sm transition-transform", isOn && "translate-x-4")} />
+                              </button>
+                              <span className={cn("text-[13px] font-medium flex-1", isOn ? "text-[var(--color-fg)]" : "text-[var(--color-fg-faint)]")}>
+                                {WIDGET_LABELS[id]}
+                              </span>
+                              {isOn && (
+                                <div className="flex gap-0.5">
+                                  <button onClick={() => {
+                                    const arr = [...prefs.dashWidgets];
+                                    if (idx <= 0) return;
+                                    [arr[idx - 1], arr[idx]] = [arr[idx], arr[idx - 1]];
+                                    setDashWidgets(arr);
+                                  }} disabled={idx <= 0}
+                                    className="p-1 rounded hover:bg-[var(--color-border)] disabled:opacity-30 transition-colors">
+                                    <ChevronUp size={13} className="text-[var(--color-fg-muted)]" />
+                                  </button>
+                                  <button onClick={() => {
+                                    const arr = [...prefs.dashWidgets];
+                                    if (idx >= arr.length - 1) return;
+                                    [arr[idx], arr[idx + 1]] = [arr[idx + 1], arr[idx]];
+                                    setDashWidgets(arr);
+                                  }} disabled={idx >= prefs.dashWidgets.length - 1}
+                                    className="p-1 rounded hover:bg-[var(--color-border)] disabled:opacity-30 transition-colors">
+                                    <ChevronDown size={13} className="text-[var(--color-fg-muted)]" />
+                                  </button>
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </SectionCard>
+                  </div>
                 )}
 
                 {/* ── Modules ──────────────────────────────────────────────── */}
                 {tab === "modules" && (
                   <div className="space-y-4">
-                    <div className="bg-indigo-500/[0.06] border border-indigo-500/15 rounded-xl px-4 py-3 text-[12px] text-indigo-300/70 leading-relaxed">
+                    <div className="bg-[var(--color-accent-subtle)] border border-[var(--color-accent-subtle)] rounded-xl px-4 py-3 text-[12px] text-[var(--color-accent-fg)] leading-relaxed">
                       {t("settings_modules_sub")}
                     </div>
 
@@ -485,24 +558,24 @@ export default function SettingsPage() {
                         return (
                           <div
                             key={mod.id}
-                            className="group flex items-center gap-3 px-4 py-2.5 border-b border-[#1c1c35]/50 last:border-0 hover:bg-white/[0.02] transition-colors"
+                            className="group flex items-center gap-3 px-4 py-2.5 border-b border-[var(--color-border)]/50 last:border-0 hover:bg-[var(--color-canvas)] transition-colors"
                           >
                             <div className={cn(
                               "w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 transition-all duration-200",
                               enabled
-                                ? "bg-indigo-500/10 text-indigo-400"
-                                : "bg-[#161626] text-[#3a3a5a]"
+                                ? "bg-[var(--color-accent-subtle)] text-[var(--color-accent)]"
+                                : "bg-[var(--color-canvas)] text-[var(--color-fg-faint)]"
                             )}>
                               <Icon size={13} strokeWidth={1.75} />
                             </div>
                             <div className="flex-1 min-w-0">
                               <p className={cn(
                                 "text-[13px] font-medium transition-colors",
-                                enabled ? "text-[#d0d0e8]" : "text-[#4a4a6a]"
+                                enabled ? "text-[var(--color-fg)]" : "text-[var(--color-fg-faint)]"
                               )}>
                                 {t(`mod_${mod.id}` as Parameters<typeof t>[0])}
                               </p>
-                              <p className="text-[11px] text-[#4a4a6a] mt-px leading-tight">
+                              <p className="text-[11px] text-[var(--color-fg-faint)] mt-px leading-tight">
                                 {t(`mod_${mod.id}_sub` as Parameters<typeof t>[0])}
                               </p>
                             </div>
@@ -521,13 +594,13 @@ export default function SettingsPage() {
                         return (
                           <div
                             key={mod.id}
-                            className="group flex items-center gap-3 px-4 py-2.5 border-b border-[#1c1c35]/50 last:border-0 hover:bg-white/[0.02] transition-colors"
+                            className="group flex items-center gap-3 px-4 py-2.5 border-b border-[var(--color-border)]/50 last:border-0 hover:bg-[var(--color-canvas)] transition-colors"
                           >
                             <div className={cn(
                               "w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 transition-all duration-200",
                               enabled
-                                ? "bg-indigo-500/10 text-indigo-400"
-                                : "bg-[#161626] text-[#3a3a5a]"
+                                ? "bg-[var(--color-accent-subtle)] text-[var(--color-accent)]"
+                                : "bg-[var(--color-canvas)] text-[var(--color-fg-faint)]"
                             )}>
                               <Icon size={13} strokeWidth={1.75} />
                             </div>
@@ -535,15 +608,15 @@ export default function SettingsPage() {
                               <div className="flex items-center gap-2">
                                 <p className={cn(
                                   "text-[13px] font-medium transition-colors",
-                                  enabled ? "text-[#d0d0e8]" : "text-[#4a4a6a]"
+                                  enabled ? "text-[var(--color-fg)]" : "text-[var(--color-fg-faint)]"
                                 )}>
                                   {t(`mod_${mod.id}` as Parameters<typeof t>[0])}
                                 </p>
-                                <span className="inline-flex items-center text-[10px] font-medium bg-amber-500/8 text-amber-500/60 border border-amber-500/15 px-1.5 py-px rounded-full leading-none">
+                                <span className="inline-flex items-center text-[10px] font-medium bg-amber-50 text-amber-600 border border-amber-200 px-1.5 py-px rounded-full leading-none">
                                   {t("settings_modules_soon")}
                                 </span>
                               </div>
-                              <p className="text-[11px] text-[#4a4a6a] mt-px leading-tight">
+                              <p className="text-[11px] text-[var(--color-fg-faint)] mt-px leading-tight">
                                 {t(`mod_${mod.id}_sub` as Parameters<typeof t>[0])}
                               </p>
                             </div>
@@ -563,7 +636,7 @@ export default function SettingsPage() {
                           !customForm.open ? (
                             <button
                               onClick={() => { setConfirmDeleteId(null); setCustomForm({ open: true, mode: "create" }); }}
-                              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[12px] font-medium bg-indigo-600/90 hover:bg-indigo-500 text-white transition-all duration-150 flex-shrink-0"
+                              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[12px] font-medium bg-[var(--color-accent)]/90 hover:bg-[var(--color-accent-hover)] text-[var(--color-fg)] transition-all duration-150 flex-shrink-0"
                             >
                               <Plus size={12} strokeWidth={2.5} />
                               {t("custom_module_add")}
@@ -575,12 +648,12 @@ export default function SettingsPage() {
                       {/* Empty state */}
                       {customModules.length === 0 && !customForm.open && (
                         <div className="flex flex-col items-center gap-2.5 py-8">
-                          <div className="w-8 h-8 rounded-xl bg-[#161626] flex items-center justify-center">
-                            <Package size={14} className="text-[#3a3a5a]" />
+                          <div className="w-8 h-8 rounded-xl bg-[var(--color-canvas)] flex items-center justify-center">
+                            <Package size={14} className="text-[var(--color-fg-faint)]" />
                           </div>
                           <div className="text-center">
-                            <p className="text-[12px] font-medium text-[#4a4a6a]">{t("custom_module_empty")}</p>
-                            <p className="text-[11px] text-[#3a3a5a] mt-0.5 max-w-[200px] leading-relaxed">{t("custom_module_empty_sub")}</p>
+                            <p className="text-[12px] font-medium text-[var(--color-fg-faint)]">{t("custom_module_empty")}</p>
+                            <p className="text-[11px] text-[var(--color-fg-faint)] mt-0.5 max-w-[200px] leading-relaxed">{t("custom_module_empty_sub")}</p>
                           </div>
                         </div>
                       )}
@@ -591,20 +664,20 @@ export default function SettingsPage() {
                         const isDeleting = confirmDeleteId === mod.id;
 
                         return (
-                          <div key={mod.id} className="border-b border-[#1c1c35]/50 last:border-0">
-                            <div className="group flex items-center gap-3 px-4 py-2.5 hover:bg-white/[0.02] transition-colors">
+                          <div key={mod.id} className="border-b border-[var(--color-border)]/50 last:border-0">
+                            <div className="group flex items-center gap-3 px-4 py-2.5 hover:bg-[var(--color-canvas)] transition-colors">
                               <div className={cn(
                                 "w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 transition-all duration-200",
-                                mod.enabled ? "bg-indigo-500/10 text-indigo-400" : "bg-[#161626] text-[#3a3a5a]"
+                                mod.enabled ? "bg-[var(--color-accent-subtle)] text-[var(--color-accent)]" : "bg-[var(--color-canvas)] text-[var(--color-fg-faint)]"
                               )}>
                                 <Icon size={13} strokeWidth={1.75} />
                               </div>
                               <div className="flex-1 min-w-0">
-                                <p className={cn("text-[13px] font-medium transition-colors", mod.enabled ? "text-[#d0d0e8]" : "text-[#4a4a6a]")}>
+                                <p className={cn("text-[13px] font-medium transition-colors", mod.enabled ? "text-[var(--color-fg)]" : "text-[var(--color-fg-faint)]")}>
                                   {mod.name}
                                 </p>
                                 {mod.description && (
-                                  <p className="text-[11px] text-[#4a4a6a] mt-px truncate leading-tight">{mod.description}</p>
+                                  <p className="text-[11px] text-[var(--color-fg-faint)] mt-px truncate leading-tight">{mod.description}</p>
                                 )}
                               </div>
                               <div className="flex items-center gap-1.5 flex-shrink-0">
@@ -618,8 +691,8 @@ export default function SettingsPage() {
                                     className={cn(
                                       "p-1.5 rounded-md transition-all duration-150",
                                       isEditing
-                                        ? "bg-indigo-500/15 text-indigo-400"
-                                        : "opacity-0 group-hover:opacity-100 text-[#5a5a8a] hover:text-indigo-400 hover:bg-white/5"
+                                        ? "bg-[var(--color-accent-subtle)] text-[var(--color-accent)]"
+                                        : "opacity-0 group-hover:opacity-100 text-[var(--color-fg-faint)] hover:text-[var(--color-accent)] hover:bg-[var(--color-canvas)]"
                                     )}
                                     title={t("btn_edit")}
                                   >
@@ -633,13 +706,13 @@ export default function SettingsPage() {
                                     <span className="text-[10px] text-red-400/80 font-medium">{t("custom_module_del_confirm")}</span>
                                     <button
                                       onClick={() => handleCustomDelete(mod.id)}
-                                      className="px-2 py-1 rounded-md text-[11px] font-medium bg-red-500/90 hover:bg-red-400 text-white transition-colors"
+                                      className="px-2 py-1 rounded-md text-[11px] font-medium bg-red-500/90 hover:bg-red-400 text-[var(--color-fg)] transition-colors"
                                     >
                                       {t("btn_delete")}
                                     </button>
                                     <button
                                       onClick={() => setConfirmDeleteId(null)}
-                                      className="px-2 py-1 rounded-md text-[11px] font-medium text-[#6060a0] hover:text-white border border-[#1c1c35] transition-colors"
+                                      className="px-2 py-1 rounded-md text-[11px] font-medium text-[var(--color-fg-muted)] hover:text-[var(--color-fg)] border border-[var(--color-border)] transition-colors"
                                     >
                                       {t("btn_cancel")}
                                     </button>
@@ -647,7 +720,7 @@ export default function SettingsPage() {
                                 ) : (
                                   <button
                                     onClick={() => { setCustomForm({ open: false }); setConfirmDeleteId(mod.id); }}
-                                    className="p-1.5 rounded-md opacity-0 group-hover:opacity-100 text-[#5a5a8a] hover:text-red-400 hover:bg-white/5 transition-all duration-150"
+                                    className="p-1.5 rounded-md opacity-0 group-hover:opacity-100 text-[var(--color-fg-faint)] hover:text-red-400 hover:bg-[var(--color-canvas)] transition-all duration-150"
                                     title={t("btn_delete")}
                                   >
                                     <Trash2 size={12} />
@@ -695,10 +768,10 @@ export default function SettingsPage() {
                         { key: "tasks"    as const, label: t("settings_notif_tasks"),    sub: t("settings_notif_tasks_sub") },
                         { key: "pipeline" as const, label: t("settings_notif_pipeline"), sub: t("settings_notif_pipeline_sub") },
                       ].map(({ key, label, sub }) => (
-                        <div key={key} className="flex items-center justify-between px-5 py-3 border-b border-[#1c1c35]/60 last:border-0 hover:bg-white/[0.015] transition-colors">
+                        <div key={key} className="flex items-center justify-between px-5 py-3 border-b border-[var(--color-border)]/60 last:border-0 hover:bg-[var(--color-canvas)] transition-colors">
                           <div>
-                            <p className="text-[13px] font-medium text-[#c0c0d8]">{label}</p>
-                            <p className="text-[11px] text-[#5a5a8a] mt-0.5">{sub}</p>
+                            <p className="text-[13px] font-medium text-[var(--color-fg)]">{label}</p>
+                            <p className="text-[11px] text-[var(--color-fg-faint)] mt-0.5">{sub}</p>
                           </div>
                           <Toggle
                             enabled={notifications[key]}
@@ -709,8 +782,8 @@ export default function SettingsPage() {
                     </SectionCard>
 
                     <div className="flex items-center justify-between pt-1">
-                      <p className="text-[12px] text-[#5a5a8a]">{t("settings_demo_note")}</p>
-                      <button onClick={handleSave} className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-[13px] font-medium rounded-lg transition-colors shadow-lg shadow-indigo-500/20">
+                      <p className="text-[12px] text-[var(--color-fg-faint)]">{t("settings_demo_note")}</p>
+                      <button onClick={handleSave} className="flex items-center gap-2 px-4 py-2 bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-[var(--color-fg)] text-[13px] font-medium rounded-lg transition-colors shadow-lg ">
                         {t("settings_save")}
                       </button>
                     </div>
@@ -728,15 +801,15 @@ export default function SettingsPage() {
                       <FieldRow label={t("settings_field_new_pass")}>
                         <TextInput value="" onChange={() => {}} type="password" placeholder="••••••••" />
                       </FieldRow>
-                      <div className="px-5 py-3 flex items-center gap-2 text-[12px] text-[#5a5a8a]">
+                      <div className="px-5 py-3 flex items-center gap-2 text-[12px] text-[var(--color-fg-faint)]">
                         <Mail size={13} />
                         {t("settings_demo_note")}
                       </div>
                     </SectionCard>
 
                     <div className="flex items-center justify-between pt-1">
-                      <p className="text-[12px] text-[#5a5a8a]">{t("settings_demo_note")}</p>
-                      <button onClick={handleSave} className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-[13px] font-medium rounded-lg transition-colors shadow-lg shadow-indigo-500/20">
+                      <p className="text-[12px] text-[var(--color-fg-faint)]">{t("settings_demo_note")}</p>
+                      <button onClick={handleSave} className="flex items-center gap-2 px-4 py-2 bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-[var(--color-fg)] text-[13px] font-medium rounded-lg transition-colors shadow-lg ">
                         {t("settings_save")}
                       </button>
                     </div>

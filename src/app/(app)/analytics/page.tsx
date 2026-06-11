@@ -14,18 +14,18 @@ import { cn } from "@/lib/utils";
 
 // ── Palette ────────────────────────────────────────────────────────────────
 const STATUS_COLORS: Record<string, string> = {
-  planning:    "#6366f1",
-  in_progress: "#8b5cf6",
+  planning:    "var(--color-accent)",
+  in_progress: "#7c3aed",
   review:      "#f59e0b",
   completed:   "#10b981",
-  on_hold:     "#3f3f6e",
+  on_hold:     "#e5e7eb",
 };
 
 const PRIORITY_COLORS: Record<string, string> = {
   urgent: "#f87171",
   high:   "#fb923c",
   medium: "#818cf8",
-  low:    "#3f3f6e",
+  low:    "#e5e7eb",
 };
 
 // ── Tooltip ────────────────────────────────────────────────────────────────
@@ -33,8 +33,8 @@ const PRIORITY_COLORS: Record<string, string> = {
 function ChartTooltip({ active, payload, label }: any) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-[#1c1c35] border border-[#252545] rounded-xl p-3 shadow-2xl text-[12px] min-w-[130px]">
-      {label && <p className="text-[#8080a8] mb-2 font-medium">{label}</p>}
+    <div className="bg-[var(--color-border)] border border-[var(--color-border)] rounded-xl p-3 shadow-2xl text-[12px] min-w-[130px]">
+      {label && <p className="text-[var(--color-fg-muted)] mb-2 font-medium">{label}</p>}
       {payload.map((entry: { name: string; color: string; value: number }) => (
         <p key={entry.name} style={{ color: entry.color }} className="font-semibold">
           {entry.name}:{" "}
@@ -120,7 +120,7 @@ export default function AnalyticsPage() {
       .map(([status, value]) => ({
         name:  statusLabels[status] ?? status,
         value,
-        color: STATUS_COLORS[status] ?? "#6366f1",
+        color: STATUS_COLORS[status] ?? "var(--color-accent)",
       }));
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projects, lang]);
@@ -167,10 +167,10 @@ export default function AnalyticsPage() {
   // ── Task status stacks ────────────────────────────────────────────────────
   const taskStatusRows = useMemo(() => {
     const defs = [
-      { status: "todo",        label: t("task_todo"),          color: "bg-[#3f3f6e]"  },
+      { status: "todo",        label: t("task_todo"),          color: "bg-[#e5e7eb]"  },
       { status: "in_progress", label: t("status_in_progress"), color: "bg-indigo-500" },
       { status: "done",        label: t("task_done"),          color: "bg-emerald-500" },
-      { status: "cancelled",   label: t("task_cancelled"),     color: "bg-[#2a2a4a]"  },
+      { status: "cancelled",   label: t("task_cancelled"),     color: "bg-gray-200"  },
     ] as const;
     return defs.map((d) => {
       const count = tasks.filter((tk) => tk.status === d.status).length;
@@ -199,8 +199,8 @@ export default function AnalyticsPage() {
       value: kpis.activeClients,
       sub:   `${clients.length} ${t("analytics_clients_total")}`,
       icon:  Users,
-      color: "text-indigo-400",
-      bg:    "bg-indigo-500/10",
+      color: "text-[var(--color-accent)]",
+      bg:    "bg-[var(--color-accent-subtle)]",
       up:    true,
     },
     {
@@ -208,8 +208,8 @@ export default function AnalyticsPage() {
       value: kpis.completedProjects,
       sub:   `${projects.length} ${t("analytics_projects_total")}`,
       icon:  CheckSquare,
-      color: "text-emerald-400",
-      bg:    "bg-emerald-500/10",
+      color: "text-emerald-600",
+      bg:    "bg-emerald-50",
       up:    true,
     },
     {
@@ -217,8 +217,8 @@ export default function AnalyticsPage() {
       value: kpis.overdueTasks,
       sub:   kpis.overdueTasks > 0 ? t("analytics_need_attention") : "✓ OK",
       icon:  AlertTriangle,
-      color: kpis.overdueTasks > 0 ? "text-red-400"  : "text-emerald-400",
-      bg:    kpis.overdueTasks > 0 ? "bg-red-500/10" : "bg-emerald-500/10",
+      color: kpis.overdueTasks > 0 ? "text-red-500"  : "text-emerald-600",
+      bg:    kpis.overdueTasks > 0 ? "bg-red-500/10" : "bg-emerald-50",
       up:    kpis.overdueTasks === 0,
     },
     {
@@ -226,8 +226,8 @@ export default function AnalyticsPage() {
       value: `$${(kpis.totalBudget / 1000).toFixed(0)}K`,
       sub:   `${kpis.spentPct}% ${t("analytics_label_spent").toLowerCase()}`,
       icon:  DollarSign,
-      color: "text-amber-400",
-      bg:    "bg-amber-500/10",
+      color: "text-amber-600",
+      bg:    "bg-amber-50",
       up:    true,
     },
   ];
@@ -244,36 +244,36 @@ export default function AnalyticsPage() {
         {/* ── KPI cards ───────────────────────────────────────────────────── */}
         <div className="grid grid-cols-4 gap-4">
           {kpiCards.map((card) => (
-            <div key={card.label} className="bg-[#111128] border border-[#1c1c35] rounded-xl p-5">
+            <div key={card.label} className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-5">
               <div className="flex items-start justify-between mb-3">
-                <p className="text-[12px] text-[#5a5a8a] font-medium leading-snug max-w-[110px]">{card.label}</p>
+                <p className="text-[12px] text-[var(--color-fg-faint)] font-medium leading-snug max-w-[110px]">{card.label}</p>
                 <div className={cn("w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0", card.bg)}>
                   <card.icon size={15} className={card.color} />
                 </div>
               </div>
-              <p className="text-[28px] font-bold text-white leading-none">{card.value}</p>
+              <p className="text-[28px] font-bold text-[var(--color-fg)] leading-none">{card.value}</p>
               <div className="flex items-center gap-1 mt-2">
                 {card.up
-                  ? <TrendingUp  size={12} className="text-emerald-400 flex-shrink-0" />
-                  : <TrendingDown size={12} className="text-red-400 flex-shrink-0" />}
-                <p className="text-[11px] text-[#5a5a8a]">{card.sub}</p>
+                  ? <TrendingUp  size={12} className="text-emerald-600 flex-shrink-0" />
+                  : <TrendingDown size={12} className="text-red-500 flex-shrink-0" />}
+                <p className="text-[11px] text-[var(--color-fg-faint)]">{card.sub}</p>
               </div>
             </div>
           ))}
         </div>
 
         {/* ── Monthly activity ─────────────────────────────────────────────── */}
-        <div className="bg-[#111128] border border-[#1c1c35] rounded-xl p-5">
+        <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-5">
           <div className="flex items-center justify-between mb-5">
             <div>
-              <h2 className="text-[14px] font-semibold text-white">{t("analytics_activity_chart")}</h2>
-              <p className="text-[12px] text-[#5a5a8a] mt-0.5">{t("analytics_activity_sub")}</p>
+              <h2 className="text-[14px] font-semibold text-[var(--color-fg)]">{t("analytics_activity_chart")}</h2>
+              <p className="text-[12px] text-[var(--color-fg-faint)] mt-0.5">{t("analytics_activity_sub")}</p>
             </div>
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-1.5 text-[11px] text-[#8080a8]">
+              <div className="flex items-center gap-1.5 text-[11px] text-[var(--color-fg-muted)]">
                 <div className="w-3 h-0.5 bg-indigo-500 rounded" />{t("analytics_label_tasks")}
               </div>
-              <div className="flex items-center gap-1.5 text-[11px] text-[#8080a8]">
+              <div className="flex items-center gap-1.5 text-[11px] text-[var(--color-fg-muted)]">
                 <div className="w-3 h-0.5 bg-emerald-500 rounded" />{t("analytics_label_clients")}
               </div>
             </div>
@@ -282,22 +282,22 @@ export default function AnalyticsPage() {
             <AreaChart data={monthlyActivity} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
               <defs>
                 <linearGradient id="gradTasks" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%"  stopColor="#6366f1" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#6366f1" stopOpacity={0}   />
+                  <stop offset="5%"  stopColor="var(--color-accent)" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="var(--color-accent)" stopOpacity={0}   />
                 </linearGradient>
                 <linearGradient id="gradClients" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%"  stopColor="#10b981" stopOpacity={0.3} />
                   <stop offset="95%" stopColor="#10b981" stopOpacity={0}   />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1c1c35" vertical={false} />
-              <XAxis dataKey="month" tick={{ fill: "#5a5a8a", fontSize: 11 }} axisLine={false} tickLine={false} />
-              <YAxis allowDecimals={false} tick={{ fill: "#5a5a8a", fontSize: 11 }} axisLine={false} tickLine={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
+              <XAxis dataKey="month" tick={{ fill: "var(--color-fg-faint)", fontSize: 11 }} axisLine={false} tickLine={false} />
+              <YAxis allowDecimals={false} tick={{ fill: "var(--color-fg-faint)", fontSize: 11 }} axisLine={false} tickLine={false} />
               <Tooltip content={<ChartTooltip />} />
               <Area
                 type="monotone" dataKey={t("analytics_label_tasks")}
-                stroke="#6366f1" strokeWidth={2} fill="url(#gradTasks)"
-                dot={{ fill: "#6366f1", r: 3 }} activeDot={{ r: 5 }}
+                stroke="var(--color-accent)" strokeWidth={2} fill="url(#gradTasks)"
+                dot={{ fill: "var(--color-accent)", r: 3 }} activeDot={{ r: 5 }}
               />
               <Area
                 type="monotone" dataKey={t("analytics_label_clients")}
@@ -312,9 +312,9 @@ export default function AnalyticsPage() {
         <div className="grid grid-cols-3 gap-6">
 
           {/* Projects by status — donut */}
-          <div className="bg-[#111128] border border-[#1c1c35] rounded-xl p-5">
-            <h2 className="text-[14px] font-semibold text-white">{t("analytics_proj_status")}</h2>
-            <p className="text-[12px] text-[#5a5a8a] mt-0.5 mb-3">{t("analytics_distribution")}</p>
+          <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-5">
+            <h2 className="text-[14px] font-semibold text-[var(--color-fg)]">{t("analytics_proj_status")}</h2>
+            <p className="text-[12px] text-[var(--color-fg-faint)] mt-0.5 mb-3">{t("analytics_distribution")}</p>
             {projectsByStatus.length > 0 ? (
               <>
                 <ResponsiveContainer width="100%" height={150}>
@@ -332,8 +332,8 @@ export default function AnalyticsPage() {
                   {projectsByStatus.map((entry) => (
                     <div key={entry.name} className="flex items-center gap-2">
                       <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: entry.color }} />
-                      <span className="text-[11px] text-[#8080a8] flex-1 truncate">{entry.name}</span>
-                      <span className="text-[11px] font-semibold text-white">{entry.value}</span>
+                      <span className="text-[11px] text-[var(--color-fg-muted)] flex-1 truncate">{entry.name}</span>
+                      <span className="text-[11px] font-semibold text-[var(--color-fg)]">{entry.value}</span>
                     </div>
                   ))}
                 </div>
@@ -344,15 +344,15 @@ export default function AnalyticsPage() {
           </div>
 
           {/* Tasks by priority — horizontal bar */}
-          <div className="bg-[#111128] border border-[#1c1c35] rounded-xl p-5">
-            <h2 className="text-[14px] font-semibold text-white">{t("analytics_tasks_priority")}</h2>
-            <p className="text-[12px] text-[#5a5a8a] mt-0.5 mb-3">{t("analytics_tasks_breakdown")}</p>
+          <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-5">
+            <h2 className="text-[14px] font-semibold text-[var(--color-fg)]">{t("analytics_tasks_priority")}</h2>
+            <p className="text-[12px] text-[var(--color-fg-faint)] mt-0.5 mb-3">{t("analytics_tasks_breakdown")}</p>
             {tasks.length > 0 ? (
               <>
                 <ResponsiveContainer width="100%" height={150}>
                   <BarChart data={tasksByPriority} layout="vertical" margin={{ top: 0, right: 10, left: 0, bottom: 0 }}>
-                    <XAxis type="number" allowDecimals={false} tick={{ fill: "#5a5a8a", fontSize: 11 }} axisLine={false} tickLine={false} />
-                    <YAxis type="category" dataKey="name" width={58} tick={{ fill: "#8080a8", fontSize: 11 }} axisLine={false} tickLine={false} />
+                    <XAxis type="number" allowDecimals={false} tick={{ fill: "var(--color-fg-faint)", fontSize: 11 }} axisLine={false} tickLine={false} />
+                    <YAxis type="category" dataKey="name" width={58} tick={{ fill: "var(--color-fg-muted)", fontSize: 11 }} axisLine={false} tickLine={false} />
                     <Tooltip content={<ChartTooltip />} />
                     <Bar dataKey="value" name={t("analytics_label_tasks")} radius={[0, 4, 4, 0]}>
                       {tasksByPriority.map((entry, i) => <Cell key={i} fill={entry.fill} />)}
@@ -363,8 +363,8 @@ export default function AnalyticsPage() {
                   {tasksByPriority.map((p) => (
                     <div key={p.name} className="flex items-center gap-1.5">
                       <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: p.fill }} />
-                      <span className="text-[11px] text-[#8080a8]">{p.name}</span>
-                      <span className="text-[11px] font-semibold text-white ml-auto">{p.value}</span>
+                      <span className="text-[11px] text-[var(--color-fg-muted)]">{p.name}</span>
+                      <span className="text-[11px] font-semibold text-[var(--color-fg)] ml-auto">{p.value}</span>
                     </div>
                   ))}
                 </div>
@@ -375,27 +375,27 @@ export default function AnalyticsPage() {
           </div>
 
           {/* Task status breakdown — stacked bars */}
-          <div className="bg-[#111128] border border-[#1c1c35] rounded-xl p-5">
-            <h2 className="text-[14px] font-semibold text-white">{t("analytics_label_tasks")}</h2>
-            <p className="text-[12px] text-[#5a5a8a] mt-0.5 mb-5">{t("analytics_distribution")}</p>
+          <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-5">
+            <h2 className="text-[14px] font-semibold text-[var(--color-fg)]">{t("analytics_label_tasks")}</h2>
+            <p className="text-[12px] text-[var(--color-fg-faint)] mt-0.5 mb-5">{t("analytics_distribution")}</p>
             {tasks.length > 0 ? (
               <div className="space-y-3">
                 {taskStatusRows.map((row) => (
                   <div key={row.status}>
                     <div className="flex items-center justify-between mb-1.5">
-                      <span className="text-[12px] text-[#8080a8]">{row.label}</span>
-                      <span className="text-[12px] font-semibold text-white">
+                      <span className="text-[12px] text-[var(--color-fg-muted)]">{row.label}</span>
+                      <span className="text-[12px] font-semibold text-[var(--color-fg)]">
                         {row.count}{" "}
-                        <span className="text-[10px] text-[#5a5a8a] font-normal">({row.pct}%)</span>
+                        <span className="text-[10px] text-[var(--color-fg-faint)] font-normal">({row.pct}%)</span>
                       </span>
                     </div>
-                    <div className="h-1.5 bg-[#1c1c35] rounded-full overflow-hidden">
+                    <div className="h-1.5 bg-[var(--color-border)] rounded-full overflow-hidden">
                       <div className={cn("h-full rounded-full transition-all", row.color)} style={{ width: `${row.pct}%` }} />
                     </div>
                   </div>
                 ))}
-                <p className="text-[11px] text-[#5a5a8a] pt-1 border-t border-[#1c1c35]">
-                  {t("analytics_label_total")}: <span className="text-white font-semibold">{tasks.length}</span>
+                <p className="text-[11px] text-[var(--color-fg-faint)] pt-1 border-t border-[var(--color-border)]">
+                  {t("analytics_label_total")}: <span className="text-[var(--color-fg)] font-semibold">{tasks.length}</span>
                 </p>
               </div>
             ) : (
@@ -406,32 +406,32 @@ export default function AnalyticsPage() {
 
         {/* ── Budget by project ─────────────────────────────────────────────── */}
         {budgetByProject.length > 0 && (
-          <div className="bg-[#111128] border border-[#1c1c35] rounded-xl p-5">
+          <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-5">
             <div className="flex items-center justify-between mb-5">
               <div>
-                <h2 className="text-[14px] font-semibold text-white">{t("analytics_budget_util")}</h2>
-                <p className="text-[12px] text-[#5a5a8a] mt-0.5">{t("analytics_budget_sub")}</p>
+                <h2 className="text-[14px] font-semibold text-[var(--color-fg)]">{t("analytics_budget_util")}</h2>
+                <p className="text-[12px] text-[var(--color-fg-faint)] mt-0.5">{t("analytics_budget_sub")}</p>
               </div>
               <div className="flex items-center gap-4">
-                <div className="flex items-center gap-1.5 text-[11px] text-[#8080a8]">
+                <div className="flex items-center gap-1.5 text-[11px] text-[var(--color-fg-muted)]">
                   <div className="w-3 h-2.5 rounded-sm bg-indigo-500/40" />{t("analytics_label_budget")}
                 </div>
-                <div className="flex items-center gap-1.5 text-[11px] text-[#8080a8]">
+                <div className="flex items-center gap-1.5 text-[11px] text-[var(--color-fg-muted)]">
                   <div className="w-3 h-2.5 rounded-sm bg-indigo-500" />{t("analytics_label_spent")}
                 </div>
               </div>
             </div>
             <ResponsiveContainer width="100%" height={200}>
               <BarChart data={budgetByProject} margin={{ top: 0, right: 5, left: 0, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1c1c35" vertical={false} />
-                <XAxis dataKey="name" tick={{ fill: "#5a5a8a", fontSize: 10 }} axisLine={false} tickLine={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
+                <XAxis dataKey="name" tick={{ fill: "var(--color-fg-faint)", fontSize: 10 }} axisLine={false} tickLine={false} />
                 <YAxis
                   tickFormatter={(v: number) => `$${(v / 1000).toFixed(0)}K`}
-                  tick={{ fill: "#5a5a8a", fontSize: 11 }} axisLine={false} tickLine={false}
+                  tick={{ fill: "var(--color-fg-faint)", fontSize: 11 }} axisLine={false} tickLine={false}
                 />
                 <Tooltip content={<ChartTooltip />} />
-                <Bar dataKey={budgetKey} fill="#6366f1" fillOpacity={0.35} radius={[4, 4, 0, 0]} />
-                <Bar dataKey={spentKey}  fill="#6366f1" radius={[4, 4, 0, 0]} />
+                <Bar dataKey={budgetKey} fill="var(--color-accent)" fillOpacity={0.35} radius={[4, 4, 0, 0]} />
+                <Bar dataKey={spentKey}  fill="var(--color-accent)" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -439,35 +439,35 @@ export default function AnalyticsPage() {
 
         {/* ── Top clients ───────────────────────────────────────────────────── */}
         {topClients.length > 0 && (
-          <div className="bg-[#111128] border border-[#1c1c35] rounded-xl overflow-hidden">
-            <div className="px-5 py-4 border-b border-[#1c1c35]">
-              <h2 className="text-[14px] font-semibold text-white">{t("analytics_top_clients")}</h2>
+          <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl overflow-hidden">
+            <div className="px-5 py-4 border-b border-[var(--color-border)]">
+              <h2 className="text-[14px] font-semibold text-[var(--color-fg)]">{t("analytics_top_clients")}</h2>
             </div>
-            <div className="divide-y divide-[#1c1c35]">
+            <div className="divide-y divide-[var(--color-border)]">
               {topClients.map((client, i) => {
                 const pct = Math.round((client.totalValue / maxClientValue) * 100);
                 return (
-                  <div key={client.id} className="flex items-center gap-4 px-5 py-3.5 hover:bg-white/[0.02] transition-colors">
-                    <span className="text-[13px] font-medium text-[#5a5a8a] w-4 flex-shrink-0">{i + 1}</span>
-                    <div className="w-8 h-8 rounded-full bg-linear-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-[11px] font-bold text-white flex-shrink-0">
+                  <div key={client.id} className="flex items-center gap-4 px-5 py-3.5 hover:bg-[var(--color-canvas)] transition-colors">
+                    <span className="text-[13px] font-medium text-[var(--color-fg-faint)] w-4 flex-shrink-0">{i + 1}</span>
+                    <div className="w-8 h-8 rounded-full bg-linear-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-[11px] font-bold text-[var(--color-fg)] flex-shrink-0">
                       {client.avatar}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1.5">
-                        <p className="text-[13px] font-medium text-white truncate">{client.name}</p>
-                        <span className="text-[11px] text-[#5a5a8a] truncate hidden sm:block">{client.company}</span>
+                        <p className="text-[13px] font-medium text-[var(--color-fg)] truncate">{client.name}</p>
+                        <span className="text-[11px] text-[var(--color-fg-faint)] truncate hidden sm:block">{client.company}</span>
                       </div>
-                      <div className="h-1 bg-[#1c1c35] rounded-full overflow-hidden max-w-xs">
+                      <div className="h-1 bg-[var(--color-border)] rounded-full overflow-hidden max-w-xs">
                         <div
                           className="h-full bg-linear-to-r from-indigo-500 to-violet-500 rounded-full"
                           style={{ width: `${pct}%` }}
                         />
                       </div>
                     </div>
-                    <span className="text-[14px] font-semibold text-white flex-shrink-0">
+                    <span className="text-[14px] font-semibold text-[var(--color-fg)] flex-shrink-0">
                       ${client.totalValue.toLocaleString()}
                     </span>
-                    <span className="text-[11px] text-[#5a5a8a] w-14 text-right flex-shrink-0">
+                    <span className="text-[11px] text-[var(--color-fg-faint)] w-14 text-right flex-shrink-0">
                       {client.projectCount}p
                     </span>
                   </div>
@@ -485,7 +485,7 @@ export default function AnalyticsPage() {
 // ── Empty slot ─────────────────────────────────────────────────────────────
 function EmptySlot({ label }: { label: string }) {
   return (
-    <div className="h-[180px] flex items-center justify-center text-[13px] text-[#5a5a8a]">
+    <div className="h-[180px] flex items-center justify-center text-[13px] text-[var(--color-fg-faint)]">
       {label}
     </div>
   );

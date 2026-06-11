@@ -8,7 +8,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     <ProtectedRoute>
       <ModulesProvider>
         <SidebarProvider>
-          <div className="flex min-h-screen bg-[#07070f]">
+          <div className="flex min-h-screen bg-canvas">
             <Sidebar />
             <main className="md:ml-60 flex flex-1 flex-col min-h-screen">{children}</main>
           </div>

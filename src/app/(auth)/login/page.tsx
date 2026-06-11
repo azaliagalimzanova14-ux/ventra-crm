@@ -15,10 +15,10 @@ export default function LoginPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold tracking-tight text-zinc-50">
+      <h1 className="text-[24px] font-bold tracking-tight text-[var(--color-fg)]">
         Welcome back
       </h1>
-      <p className="mt-2 text-sm text-zinc-500">Sign in to your workspace</p>
+      <p className="mt-1.5 text-[14px] text-[var(--color-fg-muted)]">Sign in to your workspace</p>
       <div className="mt-8">
         <AuthForm
           mode="login"

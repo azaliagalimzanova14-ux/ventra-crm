@@ -45,18 +45,18 @@ export function SetupChecklist({ onDismiss }: SetupChecklistProps) {
   const pct = Math.round((completedCount / ALL_STEPS.length) * 100);
 
   return (
-    <div className="bg-[#0d0d1c] border border-[#1c1c35] rounded-2xl overflow-hidden">
+    <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden">
       {/* Header */}
-      <div className="flex items-center gap-3 px-5 py-4 border-b border-[#1c1c35]">
+      <div className="flex items-center gap-3 px-5 py-4 border-b border-[var(--color-border)]">
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between mb-1.5">
-            <h3 className="text-[13px] font-semibold text-white">{t("setup_title")}</h3>
-            <span className="text-[11px] text-[#5a5a8a]">
+            <h3 className="text-[13px] font-semibold text-[var(--color-fg)]">{t("setup_title")}</h3>
+            <span className="text-[11px] text-[var(--color-fg-faint)]">
               {completedCount}/{ALL_STEPS.length} {t("setup_completed")}
             </span>
           </div>
           {/* Progress bar */}
-          <div className="h-1.5 bg-[#1c1c35] rounded-full overflow-hidden">
+          <div className="h-1.5 bg-[var(--color-border)] rounded-full overflow-hidden">
             <div
               className="h-full bg-linear-to-r from-indigo-500 to-violet-500 rounded-full transition-all duration-500"
               style={{ width: `${pct}%` }}
@@ -66,13 +66,13 @@ export function SetupChecklist({ onDismiss }: SetupChecklistProps) {
         <div className="flex items-center gap-1 flex-shrink-0">
           <button
             onClick={() => setExpanded((v) => !v)}
-            className="p-1.5 rounded-lg text-[#5a5a8a] hover:text-white hover:bg-white/5 transition-colors"
+            className="p-1.5 rounded-lg text-[var(--color-fg-faint)] hover:text-[var(--color-fg)] hover:bg-[var(--color-canvas)] transition-colors"
           >
             {expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
           </button>
           <button
             onClick={onDismiss}
-            className="p-1.5 rounded-lg text-[#5a5a8a] hover:text-white hover:bg-white/5 transition-colors"
+            className="p-1.5 rounded-lg text-[var(--color-fg-faint)] hover:text-[var(--color-fg)] hover:bg-[var(--color-canvas)] transition-colors"
           >
             <X size={14} />
           </button>
@@ -97,16 +97,16 @@ export function SetupChecklist({ onDismiss }: SetupChecklistProps) {
                 {isDone ? (
                   <CheckCircle2 size={16} className="text-emerald-400 flex-shrink-0" />
                 ) : (
-                  <Circle size={16} className="text-[#3a3a5a] flex-shrink-0 group-hover:text-indigo-400 transition-colors" />
+                  <Circle size={16} className="text-[var(--color-fg-faint)] flex-shrink-0 group-hover:text-[var(--color-accent)] transition-colors" />
                 )}
                 <span className={cn(
                   "text-[13px] flex-1",
-                  isDone ? "line-through text-[#5a5a8a]" : "text-[#c0c0d8] group-hover:text-white transition-colors"
+                  isDone ? "line-through text-[var(--color-fg-faint)]" : "text-[var(--color-fg)] group-hover:text-[var(--color-fg)] transition-colors"
                 )}>
                   {stepLabels[step]}
                 </span>
                 {!isDone && (
-                  <span className="text-[11px] text-[#5a5a8a] group-hover:text-indigo-400 transition-colors opacity-0 group-hover:opacity-100">
+                  <span className="text-[11px] text-[var(--color-fg-faint)] group-hover:text-[var(--color-accent)] transition-colors opacity-0 group-hover:opacity-100">
                     →
                   </span>
                 )}

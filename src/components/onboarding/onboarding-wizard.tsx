@@ -95,7 +95,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
-      <div className="w-full max-w-lg bg-[#0d0d1c] border border-[#1c1c35] rounded-2xl shadow-2xl overflow-hidden">
+      <div className="w-full max-w-lg bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl shadow-2xl overflow-hidden">
         {/* Progress bar */}
         <div className="h-0.5 bg-[#1c1c35]">
           <div
@@ -115,8 +115,8 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
                     i < step
                       ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
                       : i === step
-                      ? "bg-indigo-500/20 text-indigo-400 border border-indigo-500/30"
-                      : "bg-[#1c1c35] text-[#5a5a8a] border border-[#252545]"
+                      ? "bg-[var(--color-accent)]/20 text-[var(--color-accent)] border border-indigo-500/30"
+                      : "bg-[#1c1c35] text-[var(--color-fg-faint)] border border-[var(--color-border)]"
                   )}>
                     {i < step ? <CheckCircle2 size={12} /> : i + 1}
                   </div>
@@ -124,7 +124,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
                 </div>
               ))}
             </div>
-            <button onClick={skip} className="text-[12px] text-[#5a5a8a] hover:text-white transition-colors flex items-center gap-1">
+            <button onClick={skip} className="text-[12px] text-[var(--color-fg-faint)] hover:text-[var(--color-fg)] transition-colors flex items-center gap-1">
               <X size={13} />{t("onb_skip")}
             </button>
           </div>
@@ -134,25 +134,25 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
         {step === 0 && (
           <div className="px-8 py-8 text-center space-y-4">
             <div className="w-16 h-16 mx-auto rounded-2xl bg-linear-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-xl shadow-indigo-500/30">
-              <Zap size={28} className="text-white" strokeWidth={2.5} />
+              <Zap size={28} className="text-[var(--color-fg)]" strokeWidth={2.5} />
             </div>
             <div>
-              <h2 className="text-[22px] font-bold text-white">{t("onb_welcome_title")}</h2>
-              <p className="text-[14px] text-[#8080a8] mt-2 leading-relaxed">{t("onb_welcome_sub")}</p>
+              <h2 className="text-[22px] font-bold text-[var(--color-fg)]">{t("onb_welcome_title")}</h2>
+              <p className="text-[14px] text-[var(--color-fg-muted)] mt-2 leading-relaxed">{t("onb_welcome_sub")}</p>
             </div>
             <div className="flex flex-col gap-2 pt-2 text-left">
               {[t("onb_client_title"), t("onb_project_title"), "Explore the pipeline"].map((item, i) => (
-                <div key={i} className="flex items-center gap-3 px-4 py-2.5 bg-[#111128] border border-[#1c1c35] rounded-lg">
-                  <div className="w-5 h-5 rounded-full bg-indigo-500/20 text-indigo-400 text-[10px] font-bold flex items-center justify-center border border-indigo-500/30">
+                <div key={i} className="flex items-center gap-3 px-4 py-2.5 bg-[var(--color-canvas)] border border-[var(--color-border)] rounded-lg">
+                  <div className="w-5 h-5 rounded-full bg-[var(--color-accent)]/20 text-[var(--color-accent)] text-[10px] font-bold flex items-center justify-center border border-indigo-500/30">
                     {i + 1}
                   </div>
-                  <span className="text-[13px] text-[#c0c0d8]">{item}</span>
+                  <span className="text-[13px] text-[var(--color-fg)]">{item}</span>
                 </div>
               ))}
             </div>
             <button
               onClick={() => setStep(1)}
-              className="w-full mt-2 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-medium rounded-xl transition-colors flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/20"
+              className="w-full mt-2 py-3 bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-[var(--color-fg)] font-medium rounded-xl transition-colors flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/20"
             >
               {t("onb_welcome_btn")} <ArrowRight size={16} />
             </button>
@@ -164,36 +164,36 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
           <div className="px-6 py-6 space-y-5">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <Users size={18} className="text-indigo-400" />
-                <h2 className="text-[17px] font-semibold text-white">{t("onb_client_title")}</h2>
+                <Users size={18} className="text-[var(--color-accent)]" />
+                <h2 className="text-[17px] font-semibold text-[var(--color-fg)]">{t("onb_client_title")}</h2>
               </div>
-              <p className="text-[13px] text-[#8080a8]">{t("onb_client_sub")}</p>
+              <p className="text-[13px] text-[var(--color-fg-muted)]">{t("onb_client_sub")}</p>
             </div>
             <div className="space-y-3">
               <input
                 value={clientName} onChange={(e) => setClientName(e.target.value)}
                 placeholder={t("client_ph_name")}
-                className="w-full px-3.5 py-2.5 bg-[#111128] border border-[#1c1c35] focus:border-indigo-500/60 rounded-xl text-[13px] text-white placeholder:text-[#3a3a5a] outline-none transition-colors"
+                className="w-full px-3.5 py-2.5 bg-[var(--color-canvas)] border border-[var(--color-border)] focus:border-[var(--color-accent)] rounded-xl text-[13px] text-[var(--color-fg)] placeholder:text-[var(--color-fg-faint)] outline-none transition-colors"
               />
               <input
                 value={clientCompany} onChange={(e) => setClientCompany(e.target.value)}
                 placeholder={t("client_ph_company")}
-                className="w-full px-3.5 py-2.5 bg-[#111128] border border-[#1c1c35] focus:border-indigo-500/60 rounded-xl text-[13px] text-white placeholder:text-[#3a3a5a] outline-none transition-colors"
+                className="w-full px-3.5 py-2.5 bg-[var(--color-canvas)] border border-[var(--color-border)] focus:border-[var(--color-accent)] rounded-xl text-[13px] text-[var(--color-fg)] placeholder:text-[var(--color-fg-faint)] outline-none transition-colors"
               />
               <input
                 value={clientEmail} onChange={(e) => setClientEmail(e.target.value)}
                 placeholder={t("client_ph_email")} type="email"
-                className="w-full px-3.5 py-2.5 bg-[#111128] border border-[#1c1c35] focus:border-indigo-500/60 rounded-xl text-[13px] text-white placeholder:text-[#3a3a5a] outline-none transition-colors"
+                className="w-full px-3.5 py-2.5 bg-[var(--color-canvas)] border border-[var(--color-border)] focus:border-[var(--color-accent)] rounded-xl text-[13px] text-[var(--color-fg)] placeholder:text-[var(--color-fg-faint)] outline-none transition-colors"
               />
             </div>
             <div className="flex gap-2 pt-1">
               <button onClick={() => setStep(0)}
-                className="px-4 py-2.5 text-[13px] text-[#8080a8] border border-[#1c1c35] rounded-xl hover:bg-white/5 transition-colors">
+                className="px-4 py-2.5 text-[13px] text-[var(--color-fg-muted)] border border-[var(--color-border)] rounded-xl hover:bg-[var(--color-canvas)] transition-colors">
                 {t("onb_back")}
               </button>
               <button
                 onClick={handleClientNext}
-                className="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-[13px] font-medium rounded-xl transition-colors flex items-center justify-center gap-2"
+                className="flex-1 py-2.5 bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-[var(--color-fg)] text-[13px] font-medium rounded-xl transition-colors flex items-center justify-center gap-2"
               >
                 {clientName.trim() ? t("onb_next") : t("onb_skip")} <ArrowRight size={14} />
               </button>
@@ -207,30 +207,30 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
             <div className="space-y-1">
               <div className="flex items-center gap-2">
                 <FolderKanban size={18} className="text-violet-400" />
-                <h2 className="text-[17px] font-semibold text-white">{t("onb_project_title")}</h2>
+                <h2 className="text-[17px] font-semibold text-[var(--color-fg)]">{t("onb_project_title")}</h2>
               </div>
-              <p className="text-[13px] text-[#8080a8]">{t("onb_project_sub")}</p>
+              <p className="text-[13px] text-[var(--color-fg-muted)]">{t("onb_project_sub")}</p>
             </div>
             <div className="space-y-3">
               <input
                 value={projectTitle} onChange={(e) => setProjectTitle(e.target.value)}
                 placeholder={t("project_ph_title")}
-                className="w-full px-3.5 py-2.5 bg-[#111128] border border-[#1c1c35] focus:border-indigo-500/60 rounded-xl text-[13px] text-white placeholder:text-[#3a3a5a] outline-none transition-colors"
+                className="w-full px-3.5 py-2.5 bg-[var(--color-canvas)] border border-[var(--color-border)] focus:border-[var(--color-accent)] rounded-xl text-[13px] text-[var(--color-fg)] placeholder:text-[var(--color-fg-faint)] outline-none transition-colors"
               />
               <input
                 value={projectClient} onChange={(e) => setProjectClient(e.target.value)}
                 placeholder={t("project_ph_client")}
-                className="w-full px-3.5 py-2.5 bg-[#111128] border border-[#1c1c35] focus:border-indigo-500/60 rounded-xl text-[13px] text-white placeholder:text-[#3a3a5a] outline-none transition-colors"
+                className="w-full px-3.5 py-2.5 bg-[var(--color-canvas)] border border-[var(--color-border)] focus:border-[var(--color-accent)] rounded-xl text-[13px] text-[var(--color-fg)] placeholder:text-[var(--color-fg-faint)] outline-none transition-colors"
               />
             </div>
             <div className="flex gap-2 pt-1">
               <button onClick={() => setStep(1)}
-                className="px-4 py-2.5 text-[13px] text-[#8080a8] border border-[#1c1c35] rounded-xl hover:bg-white/5 transition-colors">
+                className="px-4 py-2.5 text-[13px] text-[var(--color-fg-muted)] border border-[var(--color-border)] rounded-xl hover:bg-[var(--color-canvas)] transition-colors">
                 {t("onb_back")}
               </button>
               <button
                 onClick={handleProjectNext}
-                className="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-[13px] font-medium rounded-xl transition-colors flex items-center justify-center gap-2"
+                className="flex-1 py-2.5 bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-[var(--color-fg)] text-[13px] font-medium rounded-xl transition-colors flex items-center justify-center gap-2"
               >
                 {projectTitle.trim() ? t("onb_next") : t("onb_skip")} <ArrowRight size={14} />
               </button>
@@ -245,12 +245,12 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
               <CheckCircle2 size={30} className="text-emerald-400" />
             </div>
             <div>
-              <h2 className="text-[20px] font-bold text-white">{t("onb_done_title")}</h2>
-              <p className="text-[13px] text-[#8080a8] mt-2 leading-relaxed">{t("onb_done_sub")}</p>
+              <h2 className="text-[20px] font-bold text-[var(--color-fg)]">{t("onb_done_title")}</h2>
+              <p className="text-[13px] text-[var(--color-fg-muted)] mt-2 leading-relaxed">{t("onb_done_sub")}</p>
             </div>
             <button
               onClick={finish}
-              className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-medium rounded-xl transition-colors shadow-lg shadow-indigo-500/20"
+              className="w-full py-3 bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-[var(--color-fg)] font-medium rounded-xl transition-colors shadow-lg shadow-indigo-500/20"
             >
               {t("onb_finish")}
             </button>

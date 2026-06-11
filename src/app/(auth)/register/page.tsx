@@ -15,10 +15,10 @@ export default function RegisterPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold tracking-tight text-zinc-50">
+      <h1 className="text-[24px] font-bold tracking-tight text-[var(--color-fg)]">
         Create your account
       </h1>
-      <p className="mt-2 text-sm text-zinc-500">Start your 14-day free trial</p>
+      <p className="mt-1.5 text-[14px] text-[var(--color-fg-muted)]">Start for free, no credit card required</p>
       <div className="mt-8">
         <AuthForm
           mode="register"
