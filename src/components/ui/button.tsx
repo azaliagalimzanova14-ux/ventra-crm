@@ -1,25 +1,27 @@
+/**
+ * Button — design-token aware.
+ * Uses CSS variables from globals.css so it respects theme/accent changes.
+ */
+
 import { cn } from "@/lib/utils";
 import { forwardRef, type ButtonHTMLAttributes } from "react";
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "secondary" | "ghost" | "danger";
-  size?: "sm" | "md" | "lg";
+  size?:    "sm" | "md" | "lg";
 }
 
-const variants = {
-  primary:
-    "bg-violet-600 text-white hover:bg-violet-500 shadow-sm shadow-violet-600/20 border border-violet-500/50",
-  secondary:
-    "bg-zinc-800/80 text-zinc-100 hover:bg-zinc-700/80 border border-zinc-700/80",
-  ghost: "text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50",
-  danger:
-    "bg-red-600/10 text-red-400 hover:bg-red-600/20 border border-red-500/20",
+const variants: Record<NonNullable<ButtonProps["variant"]>, string> = {
+  primary:   "bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-white shadow-sm",
+  secondary: "bg-[var(--color-surface)] hover:bg-[var(--color-canvas)] text-[var(--color-fg-muted)] border border-[var(--color-border)]",
+  ghost:     "text-[var(--color-fg-muted)] hover:text-[var(--color-fg)] hover:bg-[var(--color-canvas)]",
+  danger:    "bg-red-50 text-red-600 hover:bg-red-100 border border-red-200",
 };
 
-const sizes = {
-  sm: "h-8 px-3 text-xs gap-1.5",
-  md: "h-9 px-4 text-sm gap-2",
-  lg: "h-11 px-6 text-sm gap-2",
+const sizes: Record<NonNullable<ButtonProps["size"]>, string> = {
+  sm: "h-8 px-3 text-[12px] gap-1.5 rounded-lg",
+  md: "h-9 px-4 text-[13px] gap-2 rounded-xl",
+  lg: "h-11 px-5 text-[14px] gap-2 rounded-xl",
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -28,7 +30,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       ref={ref}
       disabled={disabled}
       className={cn(
-        "inline-flex items-center justify-center rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500/50 disabled:pointer-events-none disabled:opacity-50",
+        "inline-flex items-center justify-center font-semibold transition-colors",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]/50",
+        "disabled:pointer-events-none disabled:opacity-50",
         variants[variant],
         sizes[size],
         className,

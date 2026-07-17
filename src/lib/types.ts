@@ -31,6 +31,39 @@ export interface Client {
   joinedAt: string;
   lastContact: string;
   tags: string[];
+  // Optional Telegram integration fields (Phase 4)
+  telegramChatId?:   string;   // Telegram chat ID as string (avoids JS integer precision issues)
+  telegramUsername?: string;   // Telegram @username without leading @
+
+  /**
+   * Channel-specific identifiers for future integrations.
+   * Key = channel name ("telegram" | "whatsapp" | "email"),
+   * Value = primary identifier for that channel.
+   *
+   * Examples:
+   *   telegram → chatId string
+   *   whatsapp → phone number (E.164)
+   *   email    → email address
+   *
+   * Populated automatically when a conversation is matched/linked.
+   */
+  channelLinks?: Record<string, string>;
+
+  // ── Ownership & assignment (Phase: Client Ownership) ──────────────────────
+  /** Team member ID of the client owner */
+  ownerId?:        string;
+  /** Display name of the owner */
+  ownerName?:      string;
+  /** 2-letter initials of the owner */
+  ownerAvatar?:    string;
+  /** Team member ID of the assigned account manager */
+  assignedId?:     string;
+  /** Display name of the assigned account manager */
+  assignedName?:   string;
+  /** 2-letter initials of the assigned account manager */
+  assignedAvatar?: string;
+  /** Optional team label (free-form, e.g. "APAC Team") */
+  teamLabel?:      string;
 }
 
 export interface Project {
@@ -82,7 +115,7 @@ export interface Deal {
 
 export interface Activity {
   id: string;
-  type: "client_added" | "project_created" | "task_done" | "deal_won" | "deal_lost" | "message" | "invoice";
+  type: "client_added" | "client_updated" | "project_created" | "task_created" | "task_done" | "deal_won" | "deal_lost" | "deal_moved" | "message" | "invoice" | "telegram_message";
   title: string;
   description: string;
   timestamp: string;

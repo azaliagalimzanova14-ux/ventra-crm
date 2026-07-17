@@ -1,0 +1,19 @@
+{
+  "timestamp": "2026-07-10T18:14:00.198Z",
+  "baseUrl": "http://localhost:3000",
+  "dbPath": "/sessions/laughing-epic-babbage/mnt/ai-crm/ventra.db",
+  "summary": {
+    "passed": 0,
+    "failed": 1,
+    "skipped": 0,
+    "total": 1
+  },
+  "results": [
+    {
+      "ok": "FAIL",
+      "section": "1. Server & Database",
+      "name": "Server responding on :3000",
+      "note": "status 0 — fetch failed"
+    }
+  ]
+}

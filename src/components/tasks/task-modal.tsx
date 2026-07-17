@@ -9,7 +9,11 @@ import { cn } from "@/lib/utils";
 interface TaskModalProps {
   open: boolean;
   task?: Task;
-  defaultStatus?: TaskStatus;
+  defaultStatus?:      TaskStatus;
+  defaultTitle?:       string;
+  defaultPriority?:    TaskPriority;
+  defaultAssignee?:    string;
+  defaultClientName?:  string;
   onClose: () => void;
   onSave: (task: Task) => void;
   onDelete?: (id: string) => void;
@@ -29,14 +33,21 @@ type FormState = {
   tags: string;
 };
 
-function buildInitialForm(task?: Task, defaultStatus?: TaskStatus): FormState {
+function buildInitialForm(
+  task?: Task,
+  defaultStatus?: TaskStatus,
+  defaultTitle?: string,
+  defaultPriority?: TaskPriority,
+  defaultAssignee?: string,
+  defaultClientName?: string,
+): FormState {
   return {
-    title:       task?.title       ?? "",
+    title:       task?.title       ?? defaultTitle      ?? "",
     description: task?.description ?? "",
-    projectName: task?.projectName ?? "",
-    assignee:    task?.assignee    ?? "",
-    status:      task?.status      ?? defaultStatus ?? "todo",
-    priority:    task?.priority    ?? "medium",
+    projectName: task?.projectName ?? defaultClientName ?? "",
+    assignee:    task?.assignee    ?? defaultAssignee   ?? "",
+    status:      task?.status      ?? defaultStatus     ?? "todo",
+    priority:    task?.priority    ?? defaultPriority   ?? "medium",
     dueDate:     task?.dueDate     ?? "",
     tags:        task?.tags?.join(", ") ?? "",
   };
@@ -49,21 +60,21 @@ function nameToAvatar(name: string): string {
   return name.trim().slice(0, 2).toUpperCase();
 }
 
-export function TaskModal({ open, task, defaultStatus, onClose, onSave, onDelete }: TaskModalProps) {
+export function TaskModal({ open, task, defaultStatus, defaultTitle, defaultPriority, defaultAssignee, defaultClientName, onClose, onSave, onDelete }: TaskModalProps) {
   const { t } = useLanguage();
   const isEdit = !!task;
 
-  const [form, setForm]       = useState<FormState>(buildInitialForm(task, defaultStatus));
+  const [form, setForm]       = useState<FormState>(buildInitialForm(task, defaultStatus, defaultTitle, defaultPriority, defaultAssignee, defaultClientName));
   const [errors, setErrors]   = useState<Partial<Record<keyof FormState, string>>>({});
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   useEffect(() => {
     if (open) {
-      setForm(buildInitialForm(task, defaultStatus));
+      setForm(buildInitialForm(task, defaultStatus, defaultTitle, defaultPriority, defaultAssignee, defaultClientName));
       setErrors({});
       setConfirmDelete(false);
     }
-  }, [open, task, defaultStatus]);
+  }, [open, task, defaultStatus, defaultTitle, defaultPriority, defaultAssignee, defaultClientName]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };

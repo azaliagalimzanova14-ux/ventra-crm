@@ -387,6 +387,37 @@ export const tasks: Task[] = [
     createdAt: "2026-06-04",
     tags: ["WebSocket", "Реалтайм"],
   },
+  // ── Story-critical tasks (cross-reference inbox conversations) ──────────────
+  {
+    id: "t11",
+    title: "Отправить финальное коммерческое предложение — Sarah Chen",
+    description: "Доработать и отправить обновлённое КП по сделке на $48K. Sarah ждёт ответа до пятницы — совет директоров требует решения.",
+    projectId: "p2",
+    projectName: "Интеграция CRM",
+    clientName: "Apex Digital",
+    assignee: "Sarah Chen",
+    assigneeAvatar: "SC",
+    status: "todo",
+    priority: "urgent",
+    dueDate: "2026-06-28",   // today — matches inbox urgency
+    createdAt: "2026-06-26",
+    tags: ["Сделка", "КП", "Срочно"],
+  },
+  {
+    id: "t12",
+    title: "Подготовить демо для James Okafor — Ironclad Systems",
+    description: "Подготовить и провести демонстрацию корпоративного продукта для James. Потенциальная сделка на $85K в стадии квалификации.",
+    projectId: "",
+    projectName: "",
+    clientName: "Ironclad Systems",
+    assignee: "James Okafor",
+    assigneeAvatar: "JO",
+    status: "todo",
+    priority: "high",
+    dueDate: "2026-06-30",
+    createdAt: "2026-06-25",
+    tags: ["Продажи", "Демо"],
+  },
 ];
 
 export const deals: Deal[] = [
@@ -407,7 +438,7 @@ export const deals: Deal[] = [
     clientName: "Sarah Chen",
     clientAvatar: "SC",
     stage: "proposal",
-    value: 42000,
+    value: 48000,          // matches inbox AI insight copy
     probability: 65,
     expectedClose: "2026-07-01",
     owner: "Marcus Rivera",

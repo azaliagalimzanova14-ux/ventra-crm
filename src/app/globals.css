@@ -75,3 +75,24 @@ body {
 /* ── Card shadow utility (used across all cards) ────────────────────────────── */
 .shadow-card { box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03); }
 .shadow-card-hover { box-shadow: 0 4px 12px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.04); }
+
+/* ── Inbox real-time animations ──────────────────────────────────────────────── */
+
+/* Background flash on a ConvRow when a new message arrives.
+   The overlay span uses key= to remount and re-trigger this animation. */
+@keyframes conv-flash {
+  0%   { opacity: 1; background-color: var(--color-accent-subtle); }
+  100% { opacity: 0; background-color: var(--color-accent-subtle); }
+}
+.animate-conv-flash {
+  animation: conv-flash 1.6s ease-out forwards;
+}
+
+/* Slide-in + fade-in for new inbound message bubbles. */
+@keyframes msg-slide-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+.animate-msg-new {
+  animation: msg-slide-in 0.28s ease-out forwards;
+}

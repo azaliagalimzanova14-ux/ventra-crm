@@ -1,4 +1,4 @@
-import { UserPlus, FolderOpen, CheckSquare, TrendingUp, TrendingDown, MessageSquare, FileText } from "lucide-react";
+import { UserPlus, UserCheck, FolderOpen, CheckSquare, Plus, TrendingUp, TrendingDown, ArrowRight, MessageSquare, FileText, Send } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Activity } from "@/lib/types";
 import { formatDate } from "@/lib/utils";
@@ -6,12 +6,16 @@ import { formatDate } from "@/lib/utils";
 // Covers every value of Activity["type"]
 const icons: Record<Activity["type"], React.ElementType> = {
   client_added:    UserPlus,
+  client_updated:  UserCheck,
   project_created: FolderOpen,
+  task_created:    Plus,
   task_done:       CheckSquare,
   deal_won:        TrendingUp,
   deal_lost:       TrendingDown,
-  message:         MessageSquare,
-  invoice:         FileText,
+  deal_moved:      ArrowRight,
+  message:          MessageSquare,
+  invoice:          FileText,
+  telegram_message: Send,
 };
 
 interface RecentActivityProps {

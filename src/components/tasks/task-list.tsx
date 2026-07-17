@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import type { Task, TaskStatus } from "@/lib/types";
 import { cn, formatDate } from "@/lib/utils";
+import { useLanguage } from "@/context/language-context";
 
 interface TaskListProps {
   tasks: Task[];
@@ -23,6 +24,7 @@ const priorityColors: Record<Task["priority"], string> = {
 };
 
 export function TaskList({ tasks, onToggle, onDelete, onAdd }: TaskListProps) {
+  const { t } = useLanguage();
   const [showForm, setShowForm] = useState(false);
   const [title, setTitle] = useState("");
   const [priority, setPriority] = useState<Task["priority"]>("medium");
@@ -89,8 +91,8 @@ export function TaskList({ tasks, onToggle, onDelete, onAdd }: TaskListProps) {
             <div className="min-w-[200px] flex-1">
               <Input
                 id="task-title"
-                label="Task"
-                placeholder="What needs to be done?"
+                label={t("tasks_input_label")}
+                placeholder={t("tasks_input_ph")}
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 required

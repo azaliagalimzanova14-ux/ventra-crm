@@ -1,0 +1,22 @@
+
+> ai-crm@0.1.0 dev
+> next dev
+
+▲ Next.js 16.2.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.109:3000
+✓ Ready in 291ms
+⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of /Users/azaliyagalimzyanova/package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * /Users/azaliyagalimzyanova/Projects/ai-crm/package-lock.json
+
+(node:45605) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/azaliyagalimzyanova/Projects/ai-crm/next.config.js is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /Users/azaliyagalimzyanova/Projects/ai-crm/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+⚠ Turbopack's filesystem cache has been deleted because we previously detected an internal error in Turbopack. Builds or page loads may be slower as a result.
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+

@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { EmptyState } from "@/components/ui/empty-state";
+import { AppToast }  from "@/components/ui/toast";
 
 const avatarColors = [
   "bg-indigo-500", "bg-emerald-500", "bg-amber-500", "bg-violet-500", "bg-blue-500",
@@ -37,10 +38,7 @@ export default function ProjectsPage() {
   }, []);
 
   // ── Toast ──────────────────────────────────────────────────────────────────
-  function showToast(msg: string) {
-    setToast(msg);
-    setTimeout(() => setToast(null), 2500);
-  }
+  function showToast(msg: string) { setToast(msg); }
 
   // ── CRUD ───────────────────────────────────────────────────────────────────
   function handleSave(project: Project) {
@@ -218,13 +216,7 @@ export default function ProjectsPage() {
 
   return (
     <>
-      {/* Toast */}
-      {toast && (
-        <div className="fixed bottom-6 right-6 z-[200] bg-[var(--color-border)] border border-[var(--color-accent)] text-[var(--color-fg)] text-[13px] font-medium px-4 py-2.5 rounded-xl shadow-xl flex items-center gap-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0" />
-          {toast}
-        </div>
-      )}
+      <AppToast msg={toast} onDone={() => setToast(null)} />
 
       {/* Modal */}
       <ProjectModal

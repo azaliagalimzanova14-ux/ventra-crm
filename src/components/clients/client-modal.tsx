@@ -5,6 +5,8 @@ import { X, Trash2, AlertTriangle } from "lucide-react";
 import { useLanguage } from "@/context/language-context";
 import type { Client, ClientStatus } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { getAssignableMembers } from "@/lib/ownership";
+import type { TeamMember } from "@/lib/team";
 
 interface ClientModalProps {
   open: boolean;
@@ -22,26 +24,32 @@ const INDUSTRY_SUGGESTIONS = [
 ];
 
 type FormState = {
-  name: string;
-  company: string;
-  email: string;
-  phone: string;
-  status: ClientStatus;
-  industry: string;
-  location: string;
-  tags: string;
+  name:       string;
+  company:    string;
+  email:      string;
+  phone:      string;
+  status:     ClientStatus;
+  industry:   string;
+  location:   string;
+  tags:       string;
+  ownerId:    string;
+  assignedId: string;
+  teamLabel:  string;
 };
 
 function buildInitialForm(client?: Client): FormState {
   return {
-    name:     client?.name     ?? "",
-    company:  client?.company  ?? "",
-    email:    client?.email    ?? "",
-    phone:    client?.phone    ?? "",
-    status:   client?.status   ?? "lead",
-    industry: client?.industry ?? "",
-    location: client?.location ?? "",
-    tags:     client?.tags?.join(", ") ?? "",
+    name:       client?.name      ?? "",
+    company:    client?.company   ?? "",
+    email:      client?.email     ?? "",
+    phone:      client?.phone     ?? "",
+    status:     client?.status    ?? "lead",
+    industry:   client?.industry  ?? "",
+    location:   client?.location  ?? "",
+    tags:       client?.tags?.join(", ") ?? "",
+    ownerId:    client?.ownerId    ?? "",
+    assignedId: client?.assignedId ?? "",
+    teamLabel:  client?.teamLabel  ?? "",
   };
 }
 
@@ -49,15 +57,17 @@ export function ClientModal({ open, client, onClose, onSave, onDelete }: ClientM
   const { t } = useLanguage();
   const isEdit = !!client;
 
-  const [form, setForm] = useState<FormState>(buildInitialForm(client));
-  const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
+  const [form,    setForm]    = useState<FormState>(buildInitialForm(client));
+  const [errors,  setErrors]  = useState<Partial<Record<keyof FormState, string>>>({});
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [members, setMembers] = useState<TeamMember[]>([]);
 
   useEffect(() => {
     if (open) {
       setForm(buildInitialForm(client));
       setErrors({});
       setConfirmDelete(false);
+      setMembers(getAssignableMembers());
     }
   }, [open, client]);
 
@@ -85,7 +95,10 @@ export function ClientModal({ open, client, onClose, onSave, onDelete }: ClientM
     e.preventDefault();
     if (!validate()) return;
 
-    const now = new Date().toISOString().split("T")[0];
+    const now     = new Date().toISOString().split("T")[0];
+    const owner   = members.find((m) => m.id === form.ownerId);
+    const manager = members.find((m) => m.id === form.assignedId);
+
     const saved: Client = {
       id:           client?.id    ?? `c-${Date.now()}`,
       avatar:       (form.name.trim().slice(0, 2)).toUpperCase(),
@@ -101,6 +114,18 @@ export function ClientModal({ open, client, onClose, onSave, onDelete }: ClientM
       industry: form.industry.trim(),
       location: form.location.trim(),
       tags:     form.tags.split(",").map((s) => s.trim()).filter(Boolean),
+      // Ownership
+      ownerId:        owner?.id,
+      ownerName:      owner?.name,
+      ownerAvatar:    owner?.avatar,
+      assignedId:     manager?.id,
+      assignedName:   manager?.name,
+      assignedAvatar: manager?.avatar,
+      teamLabel:      form.teamLabel.trim() || undefined,
+      // Preserve existing channel links / telegram fields
+      telegramChatId:   client?.telegramChatId,
+      telegramUsername: client?.telegramUsername,
+      channelLinks:     client?.channelLinks,
     };
     onSave(saved);
   }
@@ -201,6 +226,36 @@ export function ClientModal({ open, client, onClose, onSave, onDelete }: ClientM
           <FormField label={t("client_field_tags")}>
             <input type="text" value={form.tags} onChange={set("tags")}
               placeholder={t("client_ph_tags")} className={inputCls(false)} />
+          </FormField>
+
+          {/* Ownership */}
+          <div className="grid grid-cols-2 gap-3">
+            <FormField label="Owner">
+              <select value={form.ownerId} onChange={set("ownerId")} className={inputCls(false) + " cursor-pointer"}>
+                <option value="" style={{ background: "#111128" }}>— Unassigned —</option>
+                {members.map((m) => (
+                  <option key={m.id} value={m.id} style={{ background: "#111128" }}>
+                    {m.name}
+                  </option>
+                ))}
+              </select>
+            </FormField>
+            <FormField label="Assigned Manager">
+              <select value={form.assignedId} onChange={set("assignedId")} className={inputCls(false) + " cursor-pointer"}>
+                <option value="" style={{ background: "#111128" }}>— Unassigned —</option>
+                {members.map((m) => (
+                  <option key={m.id} value={m.id} style={{ background: "#111128" }}>
+                    {m.name}
+                  </option>
+                ))}
+              </select>
+            </FormField>
+          </div>
+
+          {/* Team label */}
+          <FormField label="Team">
+            <input type="text" value={form.teamLabel} onChange={set("teamLabel")}
+              placeholder="e.g. APAC Team" className={inputCls(false)} />
           </FormField>
 
           {/* Delete confirmation */}

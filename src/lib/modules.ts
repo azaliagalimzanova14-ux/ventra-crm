@@ -3,6 +3,8 @@ export type ModuleId =
   | "clients"
   | "projects"
   | "tasks"
+  | "timeline"
+  | "inbox"
   | "pipeline"
   | "analytics"
   | "assistant"
@@ -22,7 +24,9 @@ export const ALL_MODULES: ModuleDef[] = [
   { id: "clients",   href: "/clients",   defaultEnabled: true,  soon: false },
   { id: "projects",  href: "/projects",  defaultEnabled: true,  soon: false },
   { id: "tasks",     href: "/tasks",     defaultEnabled: true,  soon: false },
-  { id: "pipeline",  href: "/pipeline",  defaultEnabled: true,  soon: false },
+  { id: "timeline",  href: "/timeline",  defaultEnabled: true,  soon: false },
+  { id: "inbox",     href: "/inbox",     defaultEnabled: true,  soon: false },
+  { id: "pipeline",  href: "/deals",     defaultEnabled: true,  soon: false },
   { id: "analytics", href: "/analytics", defaultEnabled: true,  soon: false },
   { id: "assistant", href: "/assistant", defaultEnabled: true,  soon: false },
   { id: "learning",  href: "/learning",  defaultEnabled: false, soon: true  },

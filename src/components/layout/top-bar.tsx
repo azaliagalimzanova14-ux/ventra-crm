@@ -13,9 +13,14 @@ interface TopBarProps {
     label: string;
     onClick?: () => void;
   };
+  secondaryAction?: {
+    label:   string;
+    icon?:   React.ElementType;
+    onClick: () => void;
+  };
 }
 
-export function TopBar({ title, subtitle, action }: TopBarProps) {
+export function TopBar({ title, subtitle, action, secondaryAction }: TopBarProps) {
   const { lang, setLang, t } = useLanguage();
   const { toggle } = useSidebar();
   const { sw } = useTheme();
@@ -70,6 +75,19 @@ export function TopBar({ title, subtitle, action }: TopBarProps) {
             </button>
           ))}
         </div>
+
+        {secondaryAction && (() => {
+          const SecIcon = secondaryAction.icon;
+          return (
+            <button
+              onClick={secondaryAction.onClick}
+              className="flex items-center gap-1.5 px-3 py-1.5 border border-[var(--color-border)] hover:border-[var(--color-accent-subtle)] bg-[var(--color-canvas)] hover:bg-[var(--color-accent-subtle)] text-[var(--color-fg-muted)] hover:text-[var(--color-accent)] text-[13px] font-medium rounded-lg transition-colors"
+            >
+              {SecIcon && <SecIcon size={14} strokeWidth={2} />}
+              <span className="hidden sm:inline">{secondaryAction.label}</span>
+            </button>
+          );
+        })()}
 
         {action && (
           <button
