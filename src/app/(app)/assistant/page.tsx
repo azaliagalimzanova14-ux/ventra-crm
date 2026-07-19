@@ -6,7 +6,9 @@ import { TopBar }      from "@/components/layout/top-bar";
 import { TaskModal }   from "@/components/tasks/task-modal";
 import { getClients, getProjects, getTasks, getDeals, saveTasks, logActivity } from "@/lib/storage";
 import type { Client, Project, Task, Deal } from "@/lib/types";
-import { useTheme }    from "@/context/theme-context";
+import { useTheme }          from "@/context/theme-context";
+import { OpportunityDetection } from "@/components/rie/OpportunityDetection";
+import { FounderMemory }        from "@/components/memory/FounderMemory";
 import {
   Sparkles, Send, User, RotateCcw, Copy, Check,
   ThumbsUp, ThumbsDown, ChevronRight,
@@ -537,10 +539,23 @@ export default function AssistantPage() {
     setMessages((prev) => [...prev, userMsg]);
     setInput("");
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 500 + Math.random() * 700));
+    // Try real AI first; fall back to rule-based on error or 503
+    let aiResponse: string | null = null;
+    try {
+      const aiRes = await fetch("/api/assistant/chat", {
+        method:      "POST",
+        credentials: "include",
+        headers:     { "Content-Type": "application/json" },
+        body:        JSON.stringify({ message: text }),
+      });
+      if (aiRes.ok) {
+        const aiJson = await aiRes.json() as { response?: string };
+        aiResponse = aiJson.response ?? null;
+      }
+    } catch { /* network error — fall through to rule-based */ }
     setMessages((prev) => [...prev, {
       id: (Date.now() + 1).toString(), role: "assistant",
-      content: generateResponse(text, data),
+      content: aiResponse ?? generateResponse(text, data),
       timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
     }]);
     setLoading(false);
@@ -772,6 +787,28 @@ export default function AssistantPage() {
                   );
                 })}
               </div>
+            </div>
+
+            {/* ── 4. Opportunity Detection ──────────────────────────────────── */}
+            <div
+              className="rounded-2xl p-5 border"
+              style={{
+                backgroundColor: "var(--color-surface)",
+                borderColor:     "var(--color-border)",
+              }}
+            >
+              <OpportunityDetection />
+            </div>
+
+            {/* ── 5. Founder Memory ─────────────────────────────────────────── */}
+            <div
+              className="rounded-2xl p-5 border"
+              style={{
+                backgroundColor: "var(--color-surface)",
+                borderColor:     "var(--color-border)",
+              }}
+            >
+              <FounderMemory />
             </div>
 
           </div>

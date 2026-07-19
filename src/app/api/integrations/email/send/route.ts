@@ -31,6 +31,7 @@ import {
 import { GmailProvider }                 from "@/lib/gmail-provider";
 import { getConversation }               from "@/lib/server/db-conversations";
 import { createMessage }                 from "@/lib/server/db-messages";
+import { refreshRhythm }                from "@/lib/server/rie/rhythm-engine";
 
 export const dynamic = "force-dynamic";
 
@@ -133,6 +134,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       },
       created_at: now,
     });
+
+    // Refresh rhythm after outbound email — fire-and-forget, never blocks response
+    if (conv.client_id) {
+      try { refreshRhythm(auth.workspaceId, conv.client_id); }
+      catch (e) { console.error("[RIE] refreshRhythm after email send:", e); }
+    }
 
     return NextResponse.json({ ok: true, gmailMessageId });
   } catch (err) {

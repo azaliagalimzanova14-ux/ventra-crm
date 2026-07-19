@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  LayoutDashboard, Users, FolderKanban, CheckSquare,
+  LayoutDashboard, Sunrise, BarChart2, CalendarDays, Users, FolderKanban, CheckSquare,
   BarChart3, Sparkles, Settings, Bell,
   Zap, LogOut, GraduationCap, DollarSign, Phone, X,
   TrendingUp, CheckCircle2, ChevronRight, Inbox, Users2, PieChart, Activity,
@@ -65,6 +65,9 @@ export function Sidebar() {
 
   const allNavItems: NavItem[] = [
     { moduleId: "dashboard", href: "/dashboard", label: t("nav_dashboard"),      icon: LayoutDashboard },
+    { moduleId: "morning",    href: "/morning",    label: "Morning Brief",         icon: Sunrise    },
+    { moduleId: "portfolio",  href: "/portfolio",  label: "Portfolio",             icon: BarChart2     },
+    { moduleId: "weekly",     href: "/weekly",     label: "Weekly Review",         icon: CalendarDays },
     { moduleId: "clients",   href: "/clients",   label: t("nav_clients"),        icon: Users },
     { moduleId: "projects",  href: "/projects",  label: t("nav_projects"),       icon: FolderKanban },
     { moduleId: "tasks",    href: "/tasks",    label: t("nav_tasks"),    icon: CheckSquare },

@@ -11,6 +11,7 @@
  *  - 3 tasks
  */
 
+import { randomUUID }                     from "node:crypto";
 import { NextRequest, NextResponse }      from "next/server";
 import { requireAuth, AuthError, assertPermission } from "@/lib/server/auth-helpers";
 import { createClient }                   from "@/lib/server/db-clients";
@@ -264,7 +265,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       db.prepare(
         `INSERT OR IGNORE INTO onboarding_progress (id, workspace_id, step, completed, completed_at)
          VALUES (?, ?, ?, 1, ?)`,
-      ).run(crypto.randomUUID(), workspaceId, "demo_seeded", new Date().toISOString());
+      ).run(randomUUID(), workspaceId, "demo_seeded", new Date().toISOString());
     } catch { /* non-fatal */ }
 
     return NextResponse.json({

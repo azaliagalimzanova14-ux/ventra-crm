@@ -14,6 +14,7 @@
 import { NextRequest, NextResponse }  from "next/server";
 import { requireAuth, AuthError }     from "@/lib/server/auth-helpers";
 import { updateConversation }         from "@/lib/server/db-conversations";
+import { refreshRhythm }             from "@/lib/server/rie/rhythm-engine";
 
 export const dynamic = "force-dynamic";
 
@@ -43,6 +44,13 @@ export async function PATCH(
       status:           body.status as "open" | "closed" | "snoozed" | undefined,
       title:            body.title,
     });
+
+    // Refresh rhythm when a conversation is linked to a client —
+    // all prior messages in this conversation now count toward the client's rhythm
+    if (body.client_id) {
+      try { refreshRhythm(auth.workspaceId, body.client_id); }
+      catch (e) { console.error("[RIE] refreshRhythm after conversation link:", e); }
+    }
 
     return NextResponse.json({ ok: true, conversation: updated });
   } catch (err) {

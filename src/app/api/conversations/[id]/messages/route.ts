@@ -27,6 +27,7 @@ import {
 import { touchConversation }          from "@/lib/server/db-conversations";
 import { getBotToken }                from "@/lib/telegram-db";
 import { sendPersonalMessage }        from "@/lib/mtproto-client";
+import { refreshRhythm }             from "@/lib/server/rie/rhythm-engine";
 import {
   getEmailAccount,
   getDecryptedTokens,
@@ -255,6 +256,12 @@ export async function POST(
     });
 
     touchConversation(id, auth.workspaceId, content, sentAt);
+
+    // Refresh rhythm whenever a message is sent — fire-and-forget, never blocks response
+    if (conv.client_id) {
+      try { refreshRhythm(auth.workspaceId, conv.client_id); }
+      catch (e) { console.error("[RIE] refreshRhythm after message:", e); }
+    }
 
     return NextResponse.json({
       message: {

@@ -33,6 +33,7 @@ import { addPersonalMessage, upsertPersonalDialog, getPersonalDialog }          
 import type { PersonalDialog, PersonalMessage }                                           from "./mtproto-types";
 import { upsertConversation, touchConversation }                                          from "./server/db-conversations";
 import { createMessage }                                                                  from "./server/db-messages";
+import { refreshRhythm }                                                                  from "./server/rie/rhythm-engine";
 
 // ── Globals ────────────────────────────────────────────────────────────────────
 
@@ -614,6 +615,11 @@ export async function sendPersonalMessage(
       created_at:      sentAt,
     });
     touchConversation(conv.id, workspaceId, text, sentAt);
+
+    if (conv.client_id) {
+      try { refreshRhythm(workspaceId, conv.client_id); }
+      catch { /* best-effort */ }
+    }
   } catch { /* best-effort */ }
 
   return msgId;

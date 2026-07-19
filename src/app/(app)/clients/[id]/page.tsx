@@ -15,12 +15,14 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter, useParams }             from "next/navigation";
 import { TopBar }                           from "@/components/layout/top-bar";
+import { ClientRieSection }                 from "@/components/rie/ClientRieSection";
+import { ClientTimeline }                   from "@/components/rie/ClientTimeline";
 import { cn }                               from "@/lib/utils";
 import {
   Loader2, Pencil, Trash2, Mail, Phone,
   MessageCircle, Send, Tag, AlertCircle,
   X, ExternalLink, CheckCircle2, Circle, Clock,
-  Plus, Sparkles, RefreshCw,
+  Plus,
 } from "lucide-react";
 
 // ── Types ──────────────────────────────────────────────────────────────────────
@@ -245,51 +247,7 @@ export default function ClientDetailPage() {
   const [deleting,      setDeleting]      = useState(false);
   const [toast,         setToast]         = useState<string | null>(null);
 
-  // AI summary state
-  const [aiSummary,        setAiSummary]        = useState<{
-    summary: string;
-    relationship: string;
-    keyTopics: string[];
-    nextAction: string;
-    provider: string;
-  } | null>(null);
-  const [aiSummaryLoading, setAiSummaryLoading] = useState(false);
-
   function showToast(msg: string) { setToast(msg); setTimeout(() => setToast(null), 3000); }
-
-  async function fetchAiSummary(c: ApiClient, tasks: ClientTask[], deals: ClientDeal[]) {
-    setAiSummaryLoading(true);
-    try {
-      const daysSince = c.updated_at
-        ? Math.floor((Date.now() - new Date(c.updated_at).getTime()) / 86_400_000)
-        : 0;
-      const res = await fetch("/api/ai/client-summary", {
-        method:      "POST",
-        credentials: "include",
-        headers:     { "Content-Type": "application/json" },
-        body:        JSON.stringify({
-          clientId:         c.id,
-          clientName:       c.name,
-          company:          c.company,
-          dealCount:        deals.filter((d) => d.status === "open").length,
-          taskCount:        tasks.filter((t) => t.status !== "done" && t.status !== "cancelled").length,
-          daysSinceContact: daysSince,
-        }),
-      });
-      if (res.ok) {
-        const data = await res.json() as {
-          summary?: {
-            summary: string;
-            relationship: string;
-            keyTopics: string[];
-            nextAction: string;
-            provider: string;
-          }
-        };
-        setAiSummary(data.summary ?? null);
-      }
-    } catch { /* silent */ } finally { setAiSummaryLoading(false); }
-  }
 
   const fetchClient = useCallback(async () => {
     setLoading(true);
@@ -311,8 +269,6 @@ export default function ClientDetailPage() {
         const deals = dData.deals ?? [];
         setClientTasks(tasks);
         setClientDeals(deals);
-        // Fire AI summary in background
-        void fetchAiSummary(data.client, tasks, deals);
       }
     } catch { /* silent */ } finally { setLoading(false); }
     }, [id, router]);
@@ -396,49 +352,11 @@ export default function ClientDetailPage() {
           </div>
         </div>
 
-        {/* AI Summary card */}
-        <div className="bg-gradient-to-r from-violet-50 to-indigo-50 border border-violet-200 rounded-2xl p-4 mb-4">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-1.5">
-              <Sparkles size={13} className="text-violet-600" />
-              <p className="text-[11px] font-bold uppercase tracking-wider text-violet-700">AI Relationship Summary</p>
-            </div>
-            <button
-              onClick={() => void fetchAiSummary(client, clientTasks, clientDeals)}
-              disabled={aiSummaryLoading}
-              className="flex items-center gap-1 text-[10px] text-violet-600 hover:opacity-70 transition-opacity disabled:opacity-40"
-            >
-              <RefreshCw size={10} className={aiSummaryLoading ? "animate-spin" : ""} />
-              {aiSummaryLoading ? "Analysing…" : "Refresh"}
-            </button>
-          </div>
-          {aiSummaryLoading && !aiSummary && (
-            <div className="flex items-center gap-2 text-[12px] text-violet-600">
-              <Loader2 size={12} className="animate-spin" /> Generating summary…
-            </div>
-          )}
-          {aiSummary && (
-            <div className="space-y-2">
-              <p className="text-[12px] text-[var(--color-fg)] leading-relaxed">{aiSummary.summary}</p>
-              {aiSummary.keyTopics.length > 0 && (
-                <div className="flex flex-wrap gap-1">
-                  {aiSummary.keyTopics.map((t) => (
-                    <span key={t} className="text-[10px] px-2 py-0.5 bg-violet-100 text-violet-700 rounded-full border border-violet-200">{t}</span>
-                  ))}
-                </div>
-              )}
-              {aiSummary.nextAction && (
-                <div className="flex items-start gap-1.5 mt-1">
-                  <span className="text-[10px] font-bold text-violet-700 flex-shrink-0 mt-0.5">Next:</span>
-                  <p className="text-[11px] text-violet-800 leading-snug">{aiSummary.nextAction}</p>
-                </div>
-              )}
-            </div>
-          )}
-          {!aiSummaryLoading && !aiSummary && (
-            <p className="text-[12px] text-violet-500 italic">Click Refresh to generate an AI summary for this client.</p>
-          )}
-        </div>
+        {/* Relationship Intelligence — Health, Narrative, Action */}
+        <ClientRieSection clientId={id} />
+
+        {/* Relationship History — collapsible timeline */}
+        <ClientTimeline clientId={id} />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           {/* Contact details */}

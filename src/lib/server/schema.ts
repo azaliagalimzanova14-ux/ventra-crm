@@ -680,3 +680,100 @@ export const SQL_M15_INDEXES = `
   CREATE INDEX IF NOT EXISTS idx_ai_usage_feature
     ON ai_usage(workspace_id, feature, created_at DESC);
 `;
+
+// ── M16 — Relationship Intelligence Engine (Sprint 3.1) ───────────────────────
+
+/**
+ * Stores computed relationship rhythm and health score per client.
+ * One row per (workspace_id, client_id) — upserted on each computation.
+ *
+ * health_score: 0–100, deterministic formula (no AI required).
+ * health_label: "strong" | "healthy" | "at_risk" | "critical" | null
+ * client_initiation_pct: fraction of messages sent by the client (0–1).
+ * silence_threshold_days: 2 × avg_contact_gap_days — the point at which
+ *   silence becomes anomalous for this specific relationship.
+ */
+export const SQL_RIE_RHYTHMS = `
+  CREATE TABLE IF NOT EXISTS rie_relationship_rhythms (
+    id                     TEXT    PRIMARY KEY,
+    workspace_id           TEXT    NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
+    client_id              TEXT    NOT NULL REFERENCES clients(id)    ON DELETE CASCADE,
+    avg_response_time_hrs  REAL,
+    avg_contact_gap_days   REAL,
+    msg_per_week           REAL,
+    last_contact_at        TEXT,
+    last_client_msg_at     TEXT,
+    last_agent_msg_at      TEXT,
+    days_since_contact     INTEGER,
+    silence_threshold_days REAL,
+    client_initiation_pct  REAL,
+    health_score           INTEGER,
+    health_label           TEXT,
+    sample_size            INTEGER NOT NULL DEFAULT 0,
+    updated_at             TEXT    NOT NULL,
+    UNIQUE(workspace_id, client_id)
+  );
+`;
+
+/**
+ * Stores AI-generated relationship narratives for clients (and future: deals,
+ * conversations). One current row per (workspace_id, entity_type, entity_id).
+ * Older rows are kept with is_current = 0 for audit history.
+ *
+ * evidence_json: JSON array of EvidenceItem objects assembled server-side.
+ * signal_version: SHA-256 hash of the context inputs used to generate this
+ *   narrative — re-generation is triggered when the hash changes.
+ * confidence_score: 0–100, deterministic (sample size × rhythm stability ×
+ *   recency × evidence count multiplier). No AI required.
+ */
+export const SQL_RIE_NARRATIVES = `
+  CREATE TABLE IF NOT EXISTS rie_relationship_narratives (
+    id                  TEXT    PRIMARY KEY,
+    workspace_id        TEXT    NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
+    entity_type         TEXT    NOT NULL,
+    entity_id           TEXT    NOT NULL,
+    narrative           TEXT    NOT NULL,
+    recommended_action  TEXT    NOT NULL,
+    risk_level          TEXT    NOT NULL,
+    momentum            TEXT    NOT NULL,
+    relationship_health TEXT    NOT NULL,
+    confidence_score    INTEGER NOT NULL DEFAULT 0,
+    evidence_json       TEXT    NOT NULL DEFAULT '[]',
+    signal_version      TEXT    NOT NULL,
+    model               TEXT,
+    provider            TEXT,
+    generated_at        TEXT    NOT NULL,
+    is_current          INTEGER NOT NULL DEFAULT 1
+  );
+`;
+
+export const SQL_RIE_INDEXES = `
+  CREATE INDEX IF NOT EXISTS idx_rie_rhythms_client
+    ON rie_relationship_rhythms(workspace_id, client_id);
+
+  CREATE INDEX IF NOT EXISTS idx_rie_rhythms_health
+    ON rie_relationship_rhythms(workspace_id, health_score);
+
+  CREATE INDEX IF NOT EXISTS idx_rie_narratives_entity
+    ON rie_relationship_narratives(workspace_id, entity_type, entity_id, is_current);
+`;
+
+/**
+ * Founder Memory — workspace-level context entries the AI uses in every
+ * assistant response. Free-form text facts (e.g. "Company is a B2B SaaS",
+ * "Goal Q3: reach $50K MRR"). 20-entry soft cap enforced at API layer.
+ *
+ * Sprint 4 — only justified schema addition.
+ */
+export const SQL_WORKSPACE_MEMORY = `
+  CREATE TABLE IF NOT EXISTS workspace_memory (
+    id           TEXT PRIMARY KEY,
+    workspace_id TEXT NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
+    content      TEXT NOT NULL,
+    created_at   TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),
+    updated_at   TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
+  );
+
+  CREATE INDEX IF NOT EXISTS idx_workspace_memory_ws
+    ON workspace_memory(workspace_id, created_at DESC);
+`;

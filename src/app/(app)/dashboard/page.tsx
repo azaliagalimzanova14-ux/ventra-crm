@@ -472,7 +472,7 @@ export default function DashboardPage() {
     void fetch("/api/ai/insights", { credentials: "include" })
       .then((r) => r.json())
       .then((d: { insights?: { type: string; title: string; body: string; action?: string; priority: string }[] }) => {
-        setAiCoachingInsights(d.insights ?? []);
+        setAiCoachingInsights(Array.isArray(d.insights) ? d.insights : []);
       })
       .catch(() => { /* silent — AI may not be configured */ })
       .finally(() => setAiCoachingLoading(false));
@@ -752,7 +752,7 @@ export default function DashboardPage() {
                     void fetch("/api/ai/insights?refresh=true", { credentials: "include" })
                       .then((r) => r.json())
                       .then((d: { insights?: { type: string; title: string; body: string; action?: string; priority: string }[] }) => {
-                        setAiCoachingInsights(d.insights ?? []);
+                        setAiCoachingInsights(Array.isArray(d.insights) ? d.insights : []);
                       })
                       .catch(() => { /* silent */ })
                       .finally(() => setAiCoachingLoading(false));

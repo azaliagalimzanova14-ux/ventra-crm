@@ -38,6 +38,7 @@ import {
 import { publishTelegramEvent }         from "./telegram-event-bus";
 import { upsertConversation, touchConversation } from "./server/db-conversations";
 import { createMessage }                         from "./server/db-messages";
+import { refreshRhythm }                         from "./server/rie/rhythm-engine";
 import { kindFromMime, kindFromFilename } from "./attachment-types";
 
 // ── Constant-time secret comparison ──────────────────────────────────────────
@@ -256,6 +257,11 @@ export async function handleWebhookUpdate(
     });
 
     touchConversation(conv.id, wsId, inboxMsg.text, inboxMsg.receivedAt);
+
+    if (conv.client_id) {
+      try { refreshRhythm(wsId, conv.client_id); }
+      catch { /* best-effort — never fail a webhook */ }
+    }
   } catch { /* best-effort — never fail a webhook because of unified bridge */ }
 
   // ── 11. Broadcast to connected SSE clients ────────────────────────────────

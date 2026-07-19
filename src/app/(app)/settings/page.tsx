@@ -21,7 +21,7 @@ import {
 import {
   User, Bell, Puzzle, Shield, Settings2, Palette,
   LayoutDashboard, Users, FolderKanban, CheckSquare,
-  BarChart3, Sparkles, GraduationCap, DollarSign, Phone, TrendingUp, Inbox, GitBranch,
+  BarChart2, CalendarDays, BarChart3, Sparkles, GraduationCap, DollarSign, Phone, TrendingUp, Inbox, GitBranch, Sunrise,
   Mail, Check, Plus, Pencil, Trash2,
   Package, ChevronUp, ChevronDown, RotateCcw,
   MessageSquare, Bug, Lightbulb, CheckCheck, Trash, Filter,
@@ -78,6 +78,9 @@ type CustomFormMode =
 
 const BUILTIN_MODULE_ICONS: Record<ModuleId, React.ElementType> = {
   dashboard: LayoutDashboard,
+  morning:   Sunrise,
+  portfolio: BarChart2,
+  weekly:    CalendarDays,
   clients:   Users,
   projects:  FolderKanban,
   tasks:     CheckSquare,

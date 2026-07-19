@@ -57,6 +57,10 @@ import {
   SQL_SYSTEM_ERRORS,
   SQL_AI_USAGE,
   SQL_M15_INDEXES,
+  SQL_RIE_RHYTHMS,
+  SQL_RIE_NARRATIVES,
+  SQL_RIE_INDEXES,
+  SQL_WORKSPACE_MEMORY,
 } from "./schema";
 
 // ── Migration registry ────────────────────────────────────────────────────────
@@ -313,6 +317,26 @@ const MIGRATIONS: Migration[] = [
       db.exec(SQL_M15_INDEXES);
       // Extend workspace settings with branding fields (company_website, description, industry)
       // These are stored in the JSON settings column — no ALTER TABLE needed.
+    },
+  },
+
+  // ── 16: Relationship Intelligence Engine — Sprint 3.1 foundation ──────────
+  {
+    version: 16,
+    name:    "rie_sprint_3_1_foundation",
+    up(db) {
+      db.exec(SQL_RIE_RHYTHMS);
+      db.exec(SQL_RIE_NARRATIVES);
+      db.exec(SQL_RIE_INDEXES);
+    },
+  },
+
+  // ── 17: Founder Memory — Sprint 4 ────────────────────────────────────────
+  {
+    version: 17,
+    name:    "founder_memory_sprint_4",
+    up(db) {
+      db.exec(SQL_WORKSPACE_MEMORY);
     },
   },
 ];

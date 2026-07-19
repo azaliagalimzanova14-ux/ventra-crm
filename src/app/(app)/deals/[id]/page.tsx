@@ -126,52 +126,52 @@ function EditModal({ deal, onSave, onClose, saving }: EditModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="bg-[var(--color-bg)] rounded-xl shadow-2xl w-full max-w-md border border-[var(--color-border)]">
+      <div className="bg-[var(--color-surface)] rounded-xl shadow-2xl w-full max-w-md border border-[var(--color-border)]">
         <div className="flex items-center justify-between p-5 border-b border-[var(--color-border)]">
-          <h2 className="font-semibold text-[var(--color-text-primary)]">Edit Deal</h2>
-          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-[var(--color-bg-hover)] text-[var(--color-text-muted)]">
+          <h2 className="font-semibold text-[var(--color-fg)]">Edit Deal</h2>
+          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-[var(--color-canvas)] text-[var(--color-fg-faint)]">
             <X className="w-4 h-4" />
           </button>
         </div>
         <form onSubmit={e => { e.preventDefault(); onSave({ title, value, probability, expected_close: closeDate || null, description: description.trim() || null, currency }); }} className="p-5 space-y-4">
           <div>
-            <label className="block text-xs font-medium text-[var(--color-text-muted)] mb-1">Deal Title *</label>
+            <label className="block text-xs font-medium text-[var(--color-fg-faint)] mb-1">Deal Title *</label>
             <input required value={title} onChange={e => setTitle(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] text-sm text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]" />
+              className="w-full px-3 py-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] text-sm text-[var(--color-fg)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]" />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-[var(--color-text-muted)] mb-1">Value</label>
+              <label className="block text-xs font-medium text-[var(--color-fg-faint)] mb-1">Value</label>
               <input type="number" min={0} step={100} value={value} onChange={e => setValue(Number(e.target.value))}
-                className="w-full px-3 py-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] text-sm text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]" />
+                className="w-full px-3 py-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] text-sm text-[var(--color-fg)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]" />
             </div>
             <div>
-              <label className="block text-xs font-medium text-[var(--color-text-muted)] mb-1">Probability %</label>
+              <label className="block text-xs font-medium text-[var(--color-fg-faint)] mb-1">Probability %</label>
               <input type="number" min={0} max={100} value={probability} onChange={e => setProbability(Number(e.target.value))}
-                className="w-full px-3 py-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] text-sm text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]" />
+                className="w-full px-3 py-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] text-sm text-[var(--color-fg)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]" />
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-[var(--color-text-muted)] mb-1">Currency</label>
+              <label className="block text-xs font-medium text-[var(--color-fg-faint)] mb-1">Currency</label>
               <select value={currency} onChange={e => setCurrency(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] text-sm text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]">
+                className="w-full px-3 py-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] text-sm text-[var(--color-fg)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]">
                 {["USD","EUR","GBP","AED","SAR","JPY","CAD","AUD"].map(c => <option key={c}>{c}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-xs font-medium text-[var(--color-text-muted)] mb-1">Expected Close</label>
+              <label className="block text-xs font-medium text-[var(--color-fg-faint)] mb-1">Expected Close</label>
               <input type="date" value={closeDate} onChange={e => setCloseDate(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] text-sm text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]" />
+                className="w-full px-3 py-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] text-sm text-[var(--color-fg)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]" />
             </div>
           </div>
           <div>
-            <label className="block text-xs font-medium text-[var(--color-text-muted)] mb-1">Description</label>
+            <label className="block text-xs font-medium text-[var(--color-fg-faint)] mb-1">Description</label>
             <textarea value={description} onChange={e => setDescription(e.target.value)} rows={3}
-              className="w-full px-3 py-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] text-sm text-[var(--color-text-primary)] resize-none focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]" />
+              className="w-full px-3 py-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] text-sm text-[var(--color-fg)] resize-none focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]" />
           </div>
           <div className="flex gap-3 pt-1">
-            <button type="button" onClick={onClose} className="flex-1 py-2 rounded-lg border border-[var(--color-border)] text-sm text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-hover)]">Cancel</button>
+            <button type="button" onClick={onClose} className="flex-1 py-2 rounded-lg border border-[var(--color-border)] text-sm text-[var(--color-fg-muted)] hover:bg-[var(--color-canvas)]">Cancel</button>
             <button type="submit" disabled={saving} className="flex-1 py-2 rounded-lg bg-[var(--color-accent)] text-white text-sm font-medium hover:opacity-90 disabled:opacity-50 flex items-center justify-center gap-2">
               {saving && <Loader2 className="w-4 h-4 animate-spin" />}
               Save Changes
@@ -253,10 +253,10 @@ export default function DealDetailPage() {
     setLoading(true); setError(null);
     try {
       const [dealRes, stagesRes, tasksRes, actRes] = await Promise.all([
-        fetch(`/api/deals/${id}`),
-        fetch("/api/deal-stages"),
-        fetch(`/api/tasks?deal_id=${id}&limit=50`),
-        fetch(`/api/activity?entity_id=${id}&limit=20`),
+        fetch(`/api/deals/${id}`,                   { credentials: "include" }),
+        fetch("/api/deal-stages",                    { credentials: "include" }),
+        fetch(`/api/tasks?deal_id=${id}&limit=50`,   { credentials: "include" }),
+        fetch(`/api/activity?entity_id=${id}&limit=20`, { credentials: "include" }),
       ]);
       if (!dealRes.ok) { setError("Deal not found"); return; }
       const { deal }      = await dealRes.json()    as { deal: Deal };
@@ -281,7 +281,8 @@ export default function DealDetailPage() {
     setSaving(true);
     try {
       const res = await fetch(`/api/deals/${id}`, {
-        method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data),
+        method: "PATCH", credentials: "include",
+        headers: { "Content-Type": "application/json" }, body: JSON.stringify(data),
       });
       if (res.ok) {
         const { deal: updated } = await res.json() as { deal: Deal };
@@ -291,15 +292,18 @@ export default function DealDetailPage() {
   }
 
   async function handleDelete() {
-    const res = await fetch(`/api/deals/${id}`, { method: "DELETE" });
-    if (res.ok) router.push("/deals");
+    try {
+      const res = await fetch(`/api/deals/${id}`, { method: "DELETE", credentials: "include" });
+      if (res.ok) router.push("/deals");
+    } catch { /* silent */ }
   }
 
   async function handleMoveStage(stageId: string) {
     setMoving(true);
     try {
       const res = await fetch(`/api/deals/${id}/stage`, {
-        method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ stage_id: stageId }),
+        method: "PATCH", credentials: "include",
+        headers: { "Content-Type": "application/json" }, body: JSON.stringify({ stage_id: stageId }),
       });
       if (res.ok) {
         const { deal: updated } = await res.json() as { deal: Deal };
@@ -340,7 +344,7 @@ export default function DealDetailPage() {
 
       <div className="flex-1 overflow-auto p-6 max-w-4xl mx-auto w-full">
         {/* Back */}
-        <Link href="/deals" className="flex items-center gap-1.5 text-sm text-[var(--color-text-muted)] hover:text-[var(--color-accent)] mb-5">
+        <Link href="/deals" className="flex items-center gap-1.5 text-sm text-[var(--color-fg-faint)] hover:text-[var(--color-accent)] mb-5">
           <ArrowLeft className="w-4 h-4" /> Back to Deals
         </Link>
 
@@ -348,7 +352,7 @@ export default function DealDetailPage() {
         <div className="flex items-start justify-between mb-5 gap-4">
           <div>
             <div className="flex items-center gap-3 mb-1">
-              <h1 className="text-xl font-bold text-[var(--color-text-primary)]">{deal.title}</h1>
+              <h1 className="text-xl font-bold text-[var(--color-fg)]">{deal.title}</h1>
               {deal.status !== "open" && (
                 <span className={cn(
                   "flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full",
@@ -359,8 +363,8 @@ export default function DealDetailPage() {
                 </span>
               )}
             </div>
-            <div className="flex items-center gap-3 text-sm text-[var(--color-text-muted)]">
-              <span className="font-semibold text-[var(--color-text-primary)] text-base">{fmt$(deal.value, deal.currency)}</span>
+            <div className="flex items-center gap-3 text-sm text-[var(--color-fg-faint)]">
+              <span className="font-semibold text-[var(--color-fg)] text-base">{fmt$(deal.value, deal.currency)}</span>
               <span>·</span>
               <span className="flex items-center gap-1">
                 <Target className="w-3.5 h-3.5" />
@@ -370,7 +374,7 @@ export default function DealDetailPage() {
           </div>
           <div className="flex items-center gap-2 shrink-0">
             <button onClick={() => setEditOpen(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[var(--color-border)] text-sm text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-hover)]">
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[var(--color-border)] text-sm text-[var(--color-fg-muted)] hover:bg-[var(--color-canvas)]">
               <Pencil className="w-3.5 h-3.5" /> Edit
             </button>
             <button onClick={() => setDelOpen(true)}
@@ -381,8 +385,8 @@ export default function DealDetailPage() {
         </div>
 
         {/* ── Stage progression ── */}
-        <div className="mb-6 p-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)]">
-          <p className="text-xs font-medium text-[var(--color-text-muted)] mb-3">Pipeline Stage</p>
+        <div className="mb-6 p-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]">
+          <p className="text-xs font-medium text-[var(--color-fg-faint)] mb-3">Pipeline Stage</p>
           <div className="flex items-center gap-1 overflow-x-auto pb-1">
             {stagesSorted.map((stage, idx) => {
               const isCurrent = stage.id === deal.stage_id;
@@ -399,7 +403,7 @@ export default function DealDetailPage() {
                         : isPast
                         ? "opacity-60 hover:opacity-100 cursor-pointer"
                         : deal.status === "open"
-                        ? "text-[var(--color-text-muted)] hover:bg-[var(--color-bg-hover)] cursor-pointer"
+                        ? "text-[var(--color-fg-faint)] hover:bg-[var(--color-canvas)] cursor-pointer"
                         : "cursor-default opacity-40",
                     )}
                     style={isCurrent
@@ -412,14 +416,14 @@ export default function DealDetailPage() {
                     {stage.name}
                   </button>
                   {idx < stagesSorted.length - 1 && (
-                    <ChevronRight className="w-3 h-3 text-[var(--color-text-muted)] shrink-0" />
+                    <ChevronRight className="w-3 h-3 text-[var(--color-fg-faint)] shrink-0" />
                   )}
                 </div>
               );
             })}
           </div>
           {deal.status === "open" && (
-            <p className="text-xs text-[var(--color-text-muted)] mt-2">Click a stage above to move this deal</p>
+            <p className="text-xs text-[var(--color-fg-faint)] mt-2">Click a stage above to move this deal</p>
           )}
         </div>
 
@@ -432,21 +436,21 @@ export default function DealDetailPage() {
             { label: "Currency",       value: deal.currency,                icon: DollarSign, href: undefined },
             { label: "Stage",          value: deal.stage.name,              icon: Target, href: undefined },
           ].map(info => (
-            <div key={info.label} className="p-3 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)]">
-              <div className="flex items-center gap-1.5 text-xs text-[var(--color-text-muted)] mb-1">
+            <div key={info.label} className="p-3 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]">
+              <div className="flex items-center gap-1.5 text-xs text-[var(--color-fg-faint)] mb-1">
                 <info.icon className="w-3.5 h-3.5" />
                 {info.label}
               </div>
-              <p className="text-sm font-medium text-[var(--color-text-primary)]">{info.value ?? "—"}</p>
+              <p className="text-sm font-medium text-[var(--color-fg)]">{info.value ?? "—"}</p>
             </div>
           ))}
         </div>
 
         {/* Description */}
         {deal.description && (
-          <div className="mb-6 p-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)]">
-            <p className="text-xs font-medium text-[var(--color-text-muted)] mb-2">Description</p>
-            <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed whitespace-pre-wrap">{deal.description}</p>
+          <div className="mb-6 p-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]">
+            <p className="text-xs font-medium text-[var(--color-fg-faint)] mb-2">Description</p>
+            <p className="text-sm text-[var(--color-fg-muted)] leading-relaxed whitespace-pre-wrap">{deal.description}</p>
           </div>
         )}
 
@@ -527,26 +531,26 @@ export default function DealDetailPage() {
         {/* ── Linked Tasks ── */}
         <div className="mb-6">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-sm font-semibold text-[var(--color-text-primary)]">Linked Tasks</h2>
+            <h2 className="text-sm font-semibold text-[var(--color-fg)]">Linked Tasks</h2>
             <Link href={`/tasks`} className="text-xs text-[var(--color-accent)] hover:underline flex items-center gap-1">
               All tasks <ChevronRight className="w-3 h-3" />
             </Link>
           </div>
           {tasks.length === 0 ? (
-            <p className="text-sm text-[var(--color-text-muted)]">No tasks linked to this deal.</p>
+            <p className="text-sm text-[var(--color-fg-faint)]">No tasks linked to this deal.</p>
           ) : (
             <div className="space-y-2">
               {tasks.map(task => {
                 const StatusIcon = TASK_STATUS_ICONS[task.status] ?? Circle;
                 return (
-                  <div key={task.id} className="flex items-center gap-3 p-3 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)]">
+                  <div key={task.id} className="flex items-center gap-3 p-3 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]">
                     <StatusIcon className={cn("w-4 h-4 shrink-0",
                       task.status === "done"        ? "text-emerald-500" :
                       task.status === "in_progress" ? "text-amber-500"   :
                       task.status === "cancelled"   ? "text-slate-400"   :
-                      "text-[var(--color-text-muted)]",
+                      "text-[var(--color-fg-faint)]",
                     )} />
-                    <span className={cn("flex-1 text-sm", task.status === "done" || task.status === "cancelled" ? "line-through text-[var(--color-text-muted)]" : "text-[var(--color-text-primary)]")}>
+                    <span className={cn("flex-1 text-sm", task.status === "done" || task.status === "cancelled" ? "line-through text-[var(--color-fg-faint)]" : "text-[var(--color-fg)]")}>
                       {task.title}
                     </span>
                     <span className={cn("text-[10px] font-medium px-1.5 py-0.5 rounded-full", PRIORITY_COLORS[task.priority] ?? "")}>
@@ -561,19 +565,19 @@ export default function DealDetailPage() {
 
         {/* ── Activity Feed ── */}
         <div>
-          <h2 className="text-sm font-semibold text-[var(--color-text-primary)] mb-3">Activity</h2>
+          <h2 className="text-sm font-semibold text-[var(--color-fg)] mb-3">Activity</h2>
           {activity.length === 0 ? (
-            <p className="text-sm text-[var(--color-text-muted)]">No activity recorded yet.</p>
+            <p className="text-sm text-[var(--color-fg-faint)]">No activity recorded yet.</p>
           ) : (
             <div className="space-y-3">
               {activity.map(entry => (
                 <div key={entry.id} className="flex items-start gap-3">
                   <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)] mt-2 shrink-0" />
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm text-[var(--color-text-secondary)] leading-snug">
+                    <p className="text-sm text-[var(--color-fg-muted)] leading-snug">
                       {entry.detail ?? entry.type.replace(/_/g, " ")}
                     </p>
-                    <p className="text-xs text-[var(--color-text-muted)] mt-0.5">{relTime(entry.created_at)}</p>
+                    <p className="text-xs text-[var(--color-fg-faint)] mt-0.5">{relTime(entry.created_at)}</p>
                   </div>
                 </div>
               ))}
@@ -595,18 +599,18 @@ export default function DealDetailPage() {
       {/* Delete confirm */}
       {delOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="bg-[var(--color-bg)] rounded-xl shadow-2xl w-full max-w-sm border border-[var(--color-border)] p-6">
+          <div className="bg-[var(--color-surface)] rounded-xl shadow-2xl w-full max-w-sm border border-[var(--color-border)] p-6">
             <div className="flex items-start gap-3 mb-4">
               <AlertCircle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
               <div>
-                <p className="font-semibold text-[var(--color-text-primary)]">Delete deal?</p>
-                <p className="text-sm text-[var(--color-text-muted)] mt-1">
+                <p className="font-semibold text-[var(--color-fg)]">Delete deal?</p>
+                <p className="text-sm text-[var(--color-fg-faint)] mt-1">
                   &ldquo;{deal.title}&rdquo; will be permanently deleted.
                 </p>
               </div>
             </div>
             <div className="flex gap-3">
-              <button onClick={() => setDelOpen(false)} className="flex-1 py-2 rounded-lg border border-[var(--color-border)] text-sm text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-hover)]">Cancel</button>
+              <button onClick={() => setDelOpen(false)} className="flex-1 py-2 rounded-lg border border-[var(--color-border)] text-sm text-[var(--color-fg-muted)] hover:bg-[var(--color-canvas)]">Cancel</button>
               <button onClick={handleDelete} className="flex-1 py-2 rounded-lg bg-red-600 text-white text-sm font-medium hover:bg-red-700">Delete</button>
             </div>
           </div>

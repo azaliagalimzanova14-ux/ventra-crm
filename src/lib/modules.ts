@@ -1,5 +1,8 @@
 export type ModuleId =
   | "dashboard"
+  | "morning"
+  | "portfolio"
+  | "weekly"
   | "clients"
   | "projects"
   | "tasks"
@@ -21,6 +24,9 @@ export interface ModuleDef {
 
 export const ALL_MODULES: ModuleDef[] = [
   { id: "dashboard", href: "/dashboard", defaultEnabled: true,  soon: false },
+  { id: "morning",    href: "/morning",    defaultEnabled: true,  soon: false },
+  { id: "portfolio",  href: "/portfolio",  defaultEnabled: true,  soon: false },
+  { id: "weekly",     href: "/weekly",     defaultEnabled: true,  soon: false },
   { id: "clients",   href: "/clients",   defaultEnabled: true,  soon: false },
   { id: "projects",  href: "/projects",  defaultEnabled: true,  soon: false },
   { id: "tasks",     href: "/tasks",     defaultEnabled: true,  soon: false },
