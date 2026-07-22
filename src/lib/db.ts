@@ -24,7 +24,7 @@ let _db: DatabaseSync | null = null;
 export function getDb(): DatabaseSync {
   if (_db) return _db;
 
-  const dbPath = process.env.VENTRA_DB_PATH ?? path.join(process.cwd(), "ventra.db");
+  const dbPath = process.env.VENTRA_DB_PATH ?? "/tmp/ventra.db";
 
   // Ensure parent directory exists
   const dir = path.dirname(dbPath);
